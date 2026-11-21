@@ -1,0 +1,29 @@
+{
+ "intervals": {
+  "rrMs": 836.0,
+  "heartRateBpm": 71.7703,
+  "prMs": 169.0,
+  "pDurationMs": 124.0,
+  "qrsMs": 104.0,
+  "qtMs": 448.0,
+  "qtcBazettMs": 489.9761,
+  "qtcFridericiaMs": 475.5643,
+  "beatCount": 12,
+  "rrCoefficientOfVariation": 0.026,
+  "rmssdMs": 35.5978
+ },
+ "axes": {
+  "frontalQrsAxisDeg": 37.9559,
+  "frontalQrsAxisFromVcgDeg": 29.4632,
+  "frontalTAxisFromVcgDeg": 102.842,
+  "qrsAzimuthDeg": 23.7153,
+  "qrsElevationDeg": 27.3489,
+  "tAzimuthDeg": -94.3055,
+  "tElevationDeg": 18.2278,
+  "spatialQrsTAngleDeg": 104.6339,
+  "peakQrsTAngleDeg": 74.3842
+ },
+ "warnings": [],
+ "beatCount": 12,
+ "modelAgreementQrs": 0.9278265374814599
+}

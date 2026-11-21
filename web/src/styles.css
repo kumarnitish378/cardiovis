@@ -1,0 +1,1016 @@
+/* ==========================================================================
+   CardioVis - Material Design 3 theme
+   --------------------------------------------------------------------------
+   Colour is expressed in M3 roles (primary / secondary / tertiary / error,
+   each with on-, container- and on-container- variants, plus the tonal
+   surface-container steps), not in ad-hoc hex values, so the whole UI can be
+   re-themed by editing this block alone.
+
+   This is a custom M3 scheme rather than the baseline purple, because here the
+   roles carry domain meaning and have to stay distinguishable from each other
+   on a projector:
+
+       primary    (blue)   chrome, actions, Tier 1 "measured"
+       secondary  (teal)   Tier 2 "derived", the VCG loop, positive projection
+       tertiary   (amber)  Tier 3 "illustrative", the lead axis
+       error      (red)    warnings, and the heart vector itself
+
+   Dark scheme only for now: the app is used in lecture theatres, where a light
+   UI beside a dark 3D viewport is unreadable.
+   ========================================================================== */
+
+:root {
+  /* --- M3 colour roles -------------------------------------------------- */
+  --md-primary: #a8c7fa;
+  --md-on-primary: #0a305f;
+  --md-primary-container: #284777;
+  --md-on-primary-container: #d7e3ff;
+
+  --md-secondary: #7fd8c4;
+  --md-on-secondary: #00382e;
+  --md-secondary-container: #005143;
+  --md-on-secondary-container: #9cf6e0;
+
+  --md-tertiary: #f5c77e;
+  --md-on-tertiary: #402d00;
+  --md-tertiary-container: #5c4200;
+  --md-on-tertiary-container: #ffdea6;
+
+  --md-error: #ffb4ab;
+  --md-on-error: #690005;
+  --md-error-container: #93000a;
+  --md-on-error-container: #ffdad6;
+
+  --md-surface: #111318;
+  --md-on-surface: #e2e2e9;
+  --md-surface-container-lowest: #0c0e13;
+  --md-surface-container-low: #191c20;
+  --md-surface-container: #1d2024;
+  --md-surface-container-high: #282a2f;
+  --md-surface-container-highest: #33353a;
+  --md-surface-variant: #43474e;
+  --md-on-surface-variant: #c3c6cf;
+
+  --md-outline: #8d9199;
+  --md-outline-variant: #43474e;
+
+  /* --- M3 shape scale --------------------------------------------------- */
+  --md-shape-xs: 4px;
+  --md-shape-s: 8px;
+  --md-shape-m: 12px;
+  --md-shape-l: 16px;
+  --md-shape-xl: 28px;
+  --md-shape-full: 999px;
+
+  /* --- domain colours, mapped onto the roles --------------------------- */
+  --tier1: var(--md-primary);
+  --tier2: var(--md-secondary);
+  --tier3: var(--md-tertiary);
+  --vector: var(--md-error);
+  --lead: var(--md-tertiary);
+  --projection: var(--md-secondary);
+
+  /* --- canvas tokens, read by the trace renderer ----------------------- */
+  --trace-surface: #111318;
+  --trace-grid: rgba(141, 145, 153, 0.18);
+  --trace-beat: rgba(195, 198, 207, 0.26);
+  --trace-line: #7fd8c4;
+  --trace-line-selected: #f5c77e;
+  --trace-label: #8d9199;
+  --trace-label-selected: #f5c77e;
+  --ruler-bg: #191c20;
+  --ruler-fg: #c3c6cf;
+
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--md-surface);
+  color: var(--md-on-surface);
+  /* M3 type scale: body-medium as the base */
+  font-family: Roboto, "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ===== top app bar ======================================================= */
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-height: 64px;
+  padding: 8px 16px;
+  background: var(--md-surface-container);
+  border-bottom: 1px solid var(--md-outline-variant);
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand h1 {
+  /* title-large */
+  font-size: 22px;
+  line-height: 28px;
+  letter-spacing: 0;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* M3 text button, tinted as a persistent advisory */
+.disclaimer {
+  color: var(--md-tertiary);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--md-shape-full);
+  padding: 6px 12px;
+  height: auto;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+  font-weight: 400;
+  text-align: left;
+  max-width: 470px;
+  cursor: pointer;
+}
+.disclaimer:hover {
+  background: color-mix(in srgb, var(--md-tertiary) 8%, transparent);
+  border-color: transparent;
+}
+
+.case-meta {
+  margin-left: auto;
+  text-align: right;
+  display: grid;
+  gap: 2px;
+}
+.case-meta > span:first-child {
+  /* title-small */
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.1px;
+}
+.dim {
+  color: var(--md-on-surface-variant);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+}
+
+/* M3 outlined select */
+.library {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.library label {
+  color: var(--md-on-surface-variant);
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.library select {
+  background: var(--md-surface-container-high);
+  color: var(--md-on-surface);
+  border: 1px solid var(--md-outline);
+  border-radius: var(--md-shape-s);
+  padding: 8px 12px;
+  min-width: 340px;
+  font: inherit;
+}
+.library select:hover {
+  border-color: var(--md-primary);
+}
+
+/* ===== layout ============================================================ */
+
+main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--sidebar-width, 384px);
+  min-height: 0;
+  position: relative;
+  background: var(--md-surface);
+}
+
+.viewport {
+  display: grid;
+  /* An explicit minmax(0, 1fr) column, not the implicit auto one: the WebGL
+     canvas lags a frame behind when the sidebar collapses, and an auto column
+     sizes itself to that stale width - which pushed the whole row out under the
+     sidebar and made the controls unclickable. */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(160px, 1fr) auto var(--trace-height, 230px) auto;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.app.sidebar-collapsed main {
+  grid-template-columns: minmax(0, 1fr) 0px;
+}
+.app.sidebar-collapsed aside {
+  display: none;
+}
+
+/* M3 icon button */
+.sidebar-toggle {
+  position: absolute;
+  top: 8px;
+  right: var(--sidebar-width, 384px);
+  z-index: 5;
+  width: 24px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--md-outline-variant);
+  border-right: none;
+  border-radius: var(--md-shape-full) 0 0 var(--md-shape-full);
+  background: var(--md-surface-container-high);
+  color: var(--md-on-surface-variant);
+}
+.app.sidebar-collapsed .sidebar-toggle {
+  right: 0;
+}
+
+.scene-wrap {
+  position: relative;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--md-surface-container-lowest);
+}
+.placeholder {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--md-on-surface-variant);
+}
+
+.scene-overlay-top {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  /* Clear of the sidebar toggle, which sits on the same edge. */
+  right: 44px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  pointer-events: none;
+}
+.scene-overlay-top > * {
+  pointer-events: auto;
+}
+
+/* M3 card, elevation expressed as surface tone */
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  color: var(--md-on-surface-variant);
+  background: color-mix(in srgb, var(--md-surface-container-high) 90%, transparent);
+  border: 1px solid var(--md-outline-variant);
+  border-radius: var(--md-shape-m);
+  padding: 8px 12px;
+  height: fit-content;
+}
+.swatch {
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+  display: inline-block;
+}
+.swatch.vector {
+  background: var(--vector);
+}
+.swatch.lead {
+  background: var(--lead);
+}
+.swatch.projection {
+  background: var(--projection);
+}
+
+/* M3 filter chips */
+.lead-picker {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  height: fit-content;
+}
+.lead-picker button {
+  min-width: 42px;
+  height: 32px;
+  border-radius: var(--md-shape-s);
+  background: color-mix(in srgb, var(--md-surface-container-high) 90%, transparent);
+  border: 1px solid var(--md-outline-variant);
+  font-size: 13px;
+}
+.lead-picker button.active {
+  background: var(--md-tertiary-container);
+  border-color: var(--md-tertiary);
+  color: var(--md-on-tertiary-container);
+}
+
+/* ===== Tier-3 banner (M3 banner on tertiary container) =================== */
+
+.conduction-banner {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  right: 12px;
+  display: grid;
+  gap: 6px;
+  max-height: 45%;
+  overflow-y: auto;
+  background: color-mix(in srgb, var(--md-tertiary-container) 80%, var(--md-surface));
+  color: var(--md-on-tertiary-container);
+  border: 1px solid var(--md-tertiary);
+  border-left-width: 4px;
+  border-radius: var(--md-shape-m);
+  padding: 10px 14px;
+  font-size: 12px;
+  line-height: 17px;
+}
+.conduction-banner strong {
+  color: var(--md-tertiary);
+  font-weight: 500;
+  letter-spacing: 0.1px;
+}
+.banner-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.banner-head button {
+  margin-left: auto;
+  height: 28px;
+  padding: 0 12px;
+  background: transparent;
+  border-color: var(--md-tertiary);
+  color: var(--md-tertiary);
+}
+.banner-body {
+  display: grid;
+  gap: 6px;
+}
+.conduction-banner .agreement {
+  color: color-mix(in srgb, var(--md-on-tertiary-container) 88%, transparent);
+}
+.conduction-banner .agreement.warn {
+  color: var(--md-error);
+}
+.conduction-banner.not-applicable {
+  border-color: var(--md-error);
+  background: color-mix(in srgb, var(--md-error-container) 45%, var(--md-surface));
+  color: var(--md-on-error-container);
+}
+.conduction-banner.not-applicable strong {
+  color: var(--md-error);
+}
+
+/* ===== divider + trace toolbar =========================================== */
+
+.splitter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+  height: 38px;
+  background: var(--md-surface-container-low);
+  border-top: 1px solid var(--md-outline-variant);
+  border-bottom: 1px solid var(--md-outline-variant);
+  cursor: row-resize;
+  touch-action: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.splitter::-webkit-scrollbar {
+  display: none;
+}
+.splitter.collapsed {
+  cursor: default;
+}
+.splitter .grip {
+  width: 36px;
+  height: 4px;
+  border-radius: var(--md-shape-full);
+  background: var(--md-outline-variant);
+  flex: none;
+  pointer-events: none;
+}
+.splitter:hover .grip {
+  background: var(--md-primary);
+}
+
+/* M3 segmented button */
+.trace-mode {
+  display: flex;
+  gap: 0;
+  margin-left: auto;
+  flex: none;
+}
+.trace-mode button {
+  border-radius: 0;
+  border-left-width: 0;
+  height: 30px;
+  padding: 0 12px;
+  font-size: 12px;
+}
+.trace-mode button:first-child {
+  border-left-width: 1px;
+  border-radius: var(--md-shape-full) 0 0 var(--md-shape-full);
+  padding-left: 14px;
+}
+.trace-mode button:last-child {
+  border-radius: 0 var(--md-shape-full) var(--md-shape-full) 0;
+  padding-right: 14px;
+}
+
+.trace-zoom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: default;
+  flex: none;
+}
+.trace-zoom .axis-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 8px 2px 4px;
+  border-radius: var(--md-shape-full);
+  background: var(--md-surface-container-high);
+}
+.trace-zoom button {
+  height: 26px;
+  min-width: 26px;
+  padding: 0 10px;
+  font-size: 13px;
+}
+.trace-zoom .axis-group button {
+  background: transparent;
+  border-color: transparent;
+  color: var(--md-on-surface-variant);
+  padding: 0 6px;
+}
+.trace-zoom .axis-group button:hover {
+  background: color-mix(in srgb, var(--md-primary) 12%, transparent);
+  color: var(--md-primary);
+}
+.trace-zoom .label {
+  color: var(--md-on-surface-variant);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 0 2px;
+}
+.trace-zoom .readout {
+  font-family: "Roboto Mono", ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--md-on-surface);
+  min-width: 58px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.trace-zoom .check {
+  font-size: 11px;
+}
+
+/* ===== the traces ======================================================== */
+
+.trace-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--trace-surface);
+}
+.trace-panel.empty {
+  background: var(--md-surface-container-lowest);
+}
+.trace-ruler {
+  display: block;
+  flex: none;
+  border-bottom: 1px solid var(--md-outline-variant);
+}
+/* The time under the playhead, pinned to the ruler */
+.trace-time-chip {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  z-index: 3;
+  transform: translateX(-200px);
+  padding: 0 6px;
+  border-radius: var(--md-shape-full);
+  background: var(--md-error-container);
+  color: var(--md-on-error-container);
+  font-family: "Roboto Mono", ui-monospace, monospace;
+  font-size: 10px;
+  line-height: 16px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.trace-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  cursor: crosshair;
+  touch-action: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--md-outline-variant) transparent;
+}
+.trace-scroll.box-mode {
+  cursor: cell;
+}
+.trace-content {
+  position: relative;
+}
+.trace-content canvas {
+  display: block;
+}
+.trace-playhead {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--md-error);
+  pointer-events: none;
+  will-change: transform;
+}
+.trace-band {
+  position: absolute;
+  border: 1px solid var(--md-primary);
+  background: color-mix(in srgb, var(--md-primary) 18%, transparent);
+  border-radius: var(--md-shape-xs);
+  pointer-events: none;
+}
+
+/* ===== transport controls ================================================ */
+
+.controls {
+  border-top: 1px solid var(--md-outline-variant);
+  background: var(--md-surface-container);
+  padding: 8px 12px;
+  display: grid;
+  gap: 8px;
+}
+.controls .row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.controls .label {
+  color: var(--md-on-surface-variant);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  min-width: 44px;
+}
+.controls .hint {
+  color: var(--md-on-surface-variant);
+  font-size: 11px;
+}
+.controls .readout {
+  color: var(--md-on-surface);
+  font-family: "Roboto Mono", ui-monospace, monospace;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.controls .primary-row > .readout {
+  min-width: 104px;
+  text-align: right;
+}
+.controls .scrub {
+  flex: 1;
+  min-width: 140px;
+}
+
+/* ===== M3 buttons ======================================================== */
+
+button {
+  /* outlined button */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 14px;
+  background: transparent;
+  color: var(--md-on-surface);
+  border: 1px solid var(--md-outline);
+  border-radius: var(--md-shape-full);
+  /* label-large */
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1px;
+  cursor: pointer;
+  transition:
+    background-color 90ms linear,
+    border-color 90ms linear,
+    color 90ms linear;
+}
+button:hover {
+  background: color-mix(in srgb, var(--md-primary) 8%, transparent);
+  border-color: var(--md-primary);
+}
+button:active {
+  background: color-mix(in srgb, var(--md-primary) 12%, transparent);
+}
+button:focus-visible {
+  outline: 2px solid var(--md-primary);
+  outline-offset: 2px;
+}
+/* tonal / selected */
+button.active {
+  background: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
+  border-color: var(--md-secondary);
+}
+/* filled */
+button.primary {
+  background: var(--md-primary);
+  color: var(--md-on-primary);
+  border-color: transparent;
+  min-width: 84px;
+  font-weight: 600;
+}
+button.primary:hover {
+  background: color-mix(in srgb, var(--md-primary) 90%, white);
+  border-color: transparent;
+}
+
+/* M3 checkbox row */
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  color: var(--md-on-surface-variant);
+  cursor: pointer;
+}
+.check input[type="checkbox"] {
+  accent-color: var(--md-primary);
+  width: 16px;
+  height: 16px;
+}
+
+input[type="range"] {
+  accent-color: var(--md-primary);
+  height: 20px;
+}
+
+/* ===== side panel ======================================================== */
+
+aside {
+  border-left: 1px solid var(--md-outline-variant);
+  background: var(--md-surface-container-low);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* M3 primary tabs */
+.tabs {
+  display: flex;
+  gap: 0;
+  padding: 0;
+  background: var(--md-surface-container);
+  border-bottom: 1px solid var(--md-outline-variant);
+}
+.tabs button {
+  flex: 1;
+  height: 48px;
+  border: none;
+  border-radius: 0;
+  background: none;
+  color: var(--md-on-surface-variant);
+  font-size: 13px;
+  position: relative;
+  padding: 0 8px;
+}
+.tabs button:hover {
+  background: color-mix(in srgb, var(--md-on-surface) 8%, transparent);
+  border: none;
+}
+.tabs button.active {
+  background: none;
+  color: var(--md-primary);
+}
+.tabs button.active::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  background: var(--md-primary);
+}
+
+.panels {
+  overflow-y: auto;
+  padding: 12px 12px 32px;
+  display: grid;
+  gap: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--md-outline-variant) transparent;
+}
+
+/* M3 card */
+.panel {
+  background: var(--md-surface-container);
+  border: none;
+  border-radius: var(--md-shape-m);
+  padding: 16px;
+}
+.panel h2 {
+  /* title-medium */
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.15px;
+  font-weight: 500;
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.panel h3 {
+  /* label-medium */
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--md-on-surface-variant);
+  margin: 16px 0 8px;
+}
+.panel .lede {
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+}
+.panel.teaching {
+  background: var(--md-surface-container-high);
+  border-left: 4px solid var(--md-primary);
+}
+
+.footnote {
+  color: var(--md-on-surface-variant);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+  margin: 12px 0 0;
+}
+.footnote.synthetic {
+  color: var(--md-tertiary);
+}
+
+table.kv {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+table.kv th {
+  text-align: left;
+  font-weight: 400;
+  color: var(--md-on-surface-variant);
+  padding: 4px 8px 4px 0;
+  vertical-align: top;
+  white-space: nowrap;
+}
+table.kv td {
+  padding: 4px 0;
+  font-family: "Roboto Mono", ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+table.kv.compact td {
+  padding: 3px 8px 3px 0;
+}
+table.kv .pos {
+  color: var(--md-secondary);
+}
+table.kv .neg {
+  color: var(--md-error);
+}
+
+/* M3 assist chip */
+.tier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  border: 1px solid;
+  border-radius: var(--md-shape-s);
+  padding: 0 10px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+}
+.tier-badge em {
+  font-style: normal;
+  opacity: 0.75;
+}
+.tier-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.tier-list,
+.caveats,
+.warnings {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+.tier-list li,
+.caveats li {
+  font-size: 13px;
+  line-height: 18px;
+}
+.caveats li {
+  border-left: 2px solid var(--md-tertiary);
+  padding-left: 10px;
+  color: var(--md-on-surface-variant);
+}
+
+.warnings li {
+  display: grid;
+  gap: 3px;
+  background: var(--md-surface-container-high);
+  border-left: 4px solid var(--md-outline);
+  border-radius: var(--md-shape-xs);
+  padding: 8px 10px;
+  font-size: 13px;
+}
+.warnings li b {
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.6px;
+  font-weight: 500;
+}
+.warnings li.info {
+  border-color: var(--md-primary);
+}
+.warnings li.info b {
+  color: var(--md-primary);
+}
+.warnings li.warning {
+  border-color: var(--md-tertiary);
+}
+.warnings li.warning b {
+  color: var(--md-tertiary);
+}
+.warnings li.critical {
+  border-color: var(--md-error);
+  background: color-mix(in srgb, var(--md-error-container) 35%, var(--md-surface-container-high));
+}
+.warnings li.critical b {
+  color: var(--md-error);
+}
+.warnings li span {
+  color: var(--md-on-surface-variant);
+}
+
+.error {
+  margin: 12px 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--md-error);
+  border-radius: var(--md-shape-m);
+  background: color-mix(in srgb, var(--md-error-container) 40%, var(--md-surface));
+  color: var(--md-on-error-container);
+}
+
+code {
+  font-family: "Roboto Mono", ui-monospace, monospace;
+  font-size: 12px;
+  background: var(--md-surface-container-highest);
+  border-radius: var(--md-shape-xs);
+  padding: 1px 5px;
+}
+
+/* ===== 3D scene labels =================================================== */
+
+.scene-label {
+  font-family: Roboto, system-ui, sans-serif;
+  font-size: 11px;
+  line-height: 16px;
+  white-space: nowrap;
+  user-select: none;
+  letter-spacing: 0.4px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+.scene-label.anatomy {
+  color: var(--md-on-surface-variant);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+.scene-label.chamber {
+  color: var(--md-on-tertiary-container);
+  font-size: 10.5px;
+  padding: 1px 6px;
+  border-radius: var(--md-shape-xs);
+  background: color-mix(in srgb, var(--md-tertiary-container) 70%, transparent);
+}
+.scene-label.lead {
+  color: var(--md-on-tertiary);
+  background: var(--md-tertiary);
+  font-weight: 700;
+  padding: 1px 8px;
+  border-radius: var(--md-shape-full);
+}
+.scene-label.lead-negative {
+  color: var(--md-tertiary);
+  border: 1px solid var(--md-tertiary);
+  padding: 0 7px;
+  border-radius: var(--md-shape-full);
+  background: color-mix(in srgb, var(--md-surface) 75%, transparent);
+}
+.scene-label.vector {
+  color: var(--md-on-error-container);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  background: color-mix(in srgb, var(--md-error-container) 80%, transparent);
+  padding: 1px 7px;
+  border-radius: var(--md-shape-xs);
+}
+.scene-label.projection {
+  color: var(--md-on-secondary-container);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  background: color-mix(in srgb, var(--md-secondary-container) 85%, transparent);
+  border: 1px solid var(--md-secondary);
+  padding: 1px 8px;
+  border-radius: var(--md-shape-xs);
+}
+.scene-label.projection[data-sign="neg"] {
+  color: var(--md-on-error-container);
+  background: color-mix(in srgb, var(--md-error-container) 85%, transparent);
+  border-color: var(--md-error);
+}
+
+/* ===== responsive ======================================================== */
+
+@media (max-width: 1400px) {
+  main {
+    --sidebar-width: 344px;
+  }
+  .library select {
+    min-width: 260px;
+  }
+}
+
+@media (max-width: 1100px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+  aside {
+    border-left: none;
+    border-top: 1px solid var(--md-outline-variant);
+    max-height: 45vh;
+  }
+  .sidebar-toggle {
+    display: none;
+  }
+}

@@ -1,0 +1,162 @@
+{
+ "cases": [
+  {
+   "recordId": "cv_7d9b80d726b5",
+   "path": "cv_7d9b80d726b5",
+   "title": "Real recording - normal sinus (de-identified)",
+   "description": "GE MAC2000 resting 12-lead at 500 Hz, de-identified. The only non-synthetic case in the library.",
+   "ageBand": "60-69",
+   "sex": "F",
+   "heartRateBpm": 71.7703,
+   "qrsMs": 94.0,
+   "durationS": 10.0,
+   "warnings": [
+    "PACE_MARKS"
+   ]
+  },
+  {
+   "recordId": "syn_anterior_stemi",
+   "path": "syn_anterior_stemi",
+   "title": "Anterior ST elevation",
+   "description": "Injury current directed anteriorly.",
+   "ageBand": null,
+   "sex": null,
+   "heartRateBpm": 71.4286,
+   "qrsMs": 116.0,
+   "durationS": 10.0,
+   "warnings": []
+  },
+  {
+   "recordId": "syn_atrial_fibrillation",
+   "path": "syn_atrial_fibrillation",
+   "title": "Atrial fibrillation",
+   "description": "No P waves, irregularly irregular RR - and the model breaks.",
+   "ageBand": null,
+   "sex": null,
+   "heartRateBpm": 81.0811,
+   "qrsMs": 106.0,
+   "durationS": 10.0,
+   "warnings": [
+    "IRREGULAR_RHYTHM",
+    "NO_P_WAVES"
+   ]
+  },
+  {
+   "recordId": "syn_inferior_stemi",
+   "path": "syn_inferior_stemi",
+   "title": "Inferior ST elevation",
+   "description": "Injury current directed inferiorly.",
+   "ageBand": null,
+   "sex": null,
+   "heartRateBpm": 71.4286,
+   "qrsMs": 106.0,
+   "durationS": 10.0,
+   "warnings": []
+  },
+  {
+   "recordId": "syn_lbbb",
+   "path": "syn_lbbb",
+   "title": "Left bundle branch block",
+   "description": "QRS about 150 ms, late and slurred leftward forces.",
+   "ageBand": null,
+   "sex": null,
+   "heartRateBpm": 71.4286,
+   "qrsMs": 202.0,
+   "durationS": 10.0,
+   "warnings": [
+    "WIDE_QRS"
+   ]
+  },
+  {
+   "recordId": "syn_left_axis_deviation",
+   "path": "syn_left_axis_deviation",
+   "title": "Left axis deviation",
+   "description": "Mean frontal QRS axis about -45 degrees.",
+   "ageBand": null,
+   "sex": null,
+   "heartRateBpm": 71.4286,
+   "qrsMs": 106.0,
+   "durationS": 10.0,
+   "warnings": []
+  },
+  {
+   "recordId": "syn_lvh",
+   "path": "syn_lvh",
+   "title": "Left ventricular hypertrophy (voltage criteria)",
+   "description": "Large-amplitude leftward and posterior QRS forces.",
+   "ageBand": null,
+   "sex": null,
+   "heartRateBpm": 71.4286,
+   "qrsMs": 102.0,
+   "durationS": 10.0,
+   "warnings": []
+  },
+  {
+   "recordId": "syn_normal_sinus",
+   "path": "syn_normal_sinus",
+   "title": "Normal sinus rhythm",
+   "description": "A textbook normal 12-lead at 72 bpm.",
+   "ageBand": null,
+   "sex": null,
+   "heartRateBpm": 71.4286,
+   "qrsMs": 104.0,
+   "durationS": 10.0,
+   "warnings": []
+  },
+  {
+   "recordId": "syn_rbbb",
+   "path": "syn_rbbb",
+   "title": "Right bundle branch block",
+   "description": "QRS about 140 ms with terminal rightward, anterior forces.",
+   "ageBand": null,
+   "sex": null,
+   "heartRateBpm": 71.4286,
+   "qrsMs": 120.0,
+   "durationS": 10.0,
+   "warnings": []
+  },
+  {
+   "recordId": "syn_right_axis_deviation",
+   "path": "syn_right_axis_deviation",
+   "title": "Right axis deviation",
+   "description": "Mean frontal QRS axis about +120 degrees.",
+   "ageBand": null,
+   "sex": null,
+   "heartRateBpm": 71.4286,
+   "qrsMs": 112.0,
+   "durationS": 10.0,
+   "warnings": []
+  },
+  {
+   "recordId": "syn_ventricular_paced",
+   "path": "syn_ventricular_paced",
+   "title": "Ventricular paced rhythm",
+   "description": "Pacing spikes with a wide, LBBB-like QRS.",
+   "ageBand": null,
+   "sex": null,
+   "heartRateBpm": 69.4444,
+   "qrsMs": 116.0,
+   "durationS": 10.0,
+   "warnings": [
+    "NO_P_WAVES",
+    "PACING_SPIKES_DETECTED",
+    "PACE_MARKS"
+   ]
+  },
+  {
+   "recordId": "syn_wpw",
+   "path": "syn_wpw",
+   "title": "Pre-excitation (WPW pattern)",
+   "description": "Short PR with a delta wave running into the QRS.",
+   "ageBand": null,
+   "sex": null,
+   "heartRateBpm": 71.4286,
+   "qrsMs": 120.0,
+   "durationS": 10.0,
+   "warnings": [
+    "NO_P_WAVES"
+   ]
+  }
+ ],
+ "disclaimer": "For education and research. Not a medical device. Not for diagnosis or clinical decision-making."
+}

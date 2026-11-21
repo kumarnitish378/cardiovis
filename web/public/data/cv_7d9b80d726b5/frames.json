@@ -1,0 +1,1565 @@
+{
+ "cardiovisVersion": "0.3.0",
+ "disclaimer": "For education and research. Not a medical device. Not for diagnosis or clinical decision-making.",
+ "recordId": "cv_7d9b80d726b5",
+ "title": "Real recording - normal sinus (de-identified)",
+ "description": "GE MAC2000 resting 12-lead at 500 Hz, de-identified. The only non-synthetic case in the library.",
+ "teaching": null,
+ "sourceFormat": "ge-sapphire-dcar",
+ "subject": {
+  "ageBand": "60-69",
+  "sex": "F",
+  "acquisitionYear": 2023
+ },
+ "device": {
+  "vendor": "GE",
+  "model": "ge:MAC2000",
+  "deviceName": "MAC2000",
+  "software": {
+   "Acquisition": "1.1",
+   "12SL": "12SL\u2122 v241"
+  },
+  "hasPacemakerFlag": "false",
+  "hookupQuality": "CLEAN",
+  "signalQuality": "SEVERE"
+ },
+ "signal": {
+  "sampleRateHz": 500.0,
+  "nSamples": 5000,
+  "durationS": 10.0,
+  "leads": [
+   "I",
+   "II",
+   "III",
+   "aVR",
+   "aVL",
+   "aVF",
+   "V1",
+   "V2",
+   "V3",
+   "V4",
+   "V5",
+   "V6"
+  ],
+  "independentLeads": [
+   "I",
+   "II",
+   "V1",
+   "V2",
+   "V3",
+   "V4",
+   "V5",
+   "V6"
+  ],
+  "filter": {
+   "highpassHz": 0.5,
+   "lowpassHz": 40.0,
+   "order": 3,
+   "notchHz": 50.0,
+   "notchQ": 30.0,
+   "enabled": true,
+   "description": "Butterworth order 3 bandpass 0.50-40.0 Hz, zero-phase (filtfilt); 50 Hz notch (Q=30)"
+  },
+  "deviceFilters": {
+   "highPassHz": 0.56,
+   "lowPassHz": 150.0,
+   "algorithms": [
+    {
+     "name": null,
+     "purpose": "ADS On"
+    },
+    {
+     "name": null,
+     "purpose": "Anti-interference Off"
+    }
+   ]
+  },
+  "invalidSampleFraction": {
+   "I": 0.0,
+   "II": 0.0,
+   "III": 0.0,
+   "aVR": 0.0,
+   "aVL": 0.0,
+   "aVF": 0.0,
+   "V1": 0.0,
+   "V2": 0.0,
+   "V3": 0.0,
+   "V4": 0.0,
+   "V5": 0.0,
+   "V6": 0.0
+  },
+  "leadConsistency": {
+   "maxAbsErrorMv": {
+    "III": 0.00488,
+    "aVR": 0.00976,
+    "aVL": 0.00732,
+    "aVF": 0.00732
+   },
+   "recomputed": [],
+   "flatLeads": [],
+   "toleranceMv": 0.05
+  }
+ },
+ "leadVectors": {
+  "I": {
+   "unitVector": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "plane": "frontal",
+   "angleDeg": 0.0,
+   "tier": 1
+  },
+  "II": {
+   "unitVector": [
+    0.5,
+    0.866,
+    0.0
+   ],
+   "plane": "frontal",
+   "angleDeg": 60.0,
+   "tier": 1
+  },
+  "III": {
+   "unitVector": [
+    -0.5,
+    0.866,
+    0.0
+   ],
+   "plane": "frontal",
+   "angleDeg": 120.0,
+   "tier": 1
+  },
+  "aVR": {
+   "unitVector": [
+    -0.866,
+    -0.5,
+    0.0
+   ],
+   "plane": "frontal",
+   "angleDeg": -150.0,
+   "tier": 1
+  },
+  "aVL": {
+   "unitVector": [
+    0.866,
+    -0.5,
+    0.0
+   ],
+   "plane": "frontal",
+   "angleDeg": -30.0,
+   "tier": 1
+  },
+  "aVF": {
+   "unitVector": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "plane": "frontal",
+   "angleDeg": 90.0,
+   "tier": 1
+  },
+  "V1": {
+   "unitVector": [
+    -0.4226,
+    0.0,
+    -0.9063
+   ],
+   "plane": "transverse",
+   "angleDeg": 115.0,
+   "tier": 2
+  },
+  "V2": {
+   "unitVector": [
+    -0.0698,
+    0.0,
+    -0.9976
+   ],
+   "plane": "transverse",
+   "angleDeg": 94.0,
+   "tier": 2
+  },
+  "V3": {
+   "unitVector": [
+    0.4384,
+    0.0,
+    -0.8988
+   ],
+   "plane": "transverse",
+   "angleDeg": 64.0,
+   "tier": 2
+  },
+  "V4": {
+   "unitVector": [
+    0.6561,
+    0.0,
+    -0.7547
+   ],
+   "plane": "transverse",
+   "angleDeg": 49.0,
+   "tier": 2
+  },
+  "V5": {
+   "unitVector": [
+    0.9135,
+    0.0,
+    -0.4067
+   ],
+   "plane": "transverse",
+   "angleDeg": 24.0,
+   "tier": 2
+  },
+  "V6": {
+   "unitVector": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "plane": "transverse",
+   "angleDeg": 0.0,
+   "tier": 2
+  }
+ },
+ "delineation": {
+  "detector": "pan-tompkins(multi-lead RMS) + multiscale derivative boundaries",
+  "sampleRateHz": 500.0,
+  "beats": [
+   {
+    "index": 0,
+    "rSample": 55,
+    "samples": {
+     "pOn": null,
+     "pPeak": null,
+     "pOff": null,
+     "qrsOn": 34,
+     "qrsOff": 81,
+     "tPeak": 170,
+     "tOff": 232
+    },
+    "ms": {
+     "pOn": null,
+     "pPeak": null,
+     "pOff": null,
+     "qrsOn": 68.0,
+     "qrsOff": 162.0,
+     "r": 110.0,
+     "tPeak": 340.0,
+     "tOff": 464.0
+    },
+    "rrMs": 816.0,
+    "confidence": 0.997,
+    "flags": [
+     "no_p_wave"
+    ]
+   },
+   {
+    "index": 1,
+    "rSample": 463,
+    "samples": {
+     "pOn": 371,
+     "pPeak": 403,
+     "pOff": 431,
+     "qrsOn": 443,
+     "qrsOff": 490,
+     "tPeak": 578,
+     "tOff": 641
+    },
+    "ms": {
+     "pOn": 742.0,
+     "pPeak": 806.0,
+     "pOff": 862.0,
+     "qrsOn": 886.0,
+     "qrsOff": 980.0,
+     "r": 926.0,
+     "tPeak": 1156.0,
+     "tOff": 1282.0
+    },
+    "rrMs": 816.0,
+    "confidence": 0.999,
+    "flags": []
+   },
+   {
+    "index": 2,
+    "rSample": 867,
+    "samples": {
+     "pOn": 778,
+     "pPeak": 808,
+     "pOff": 839,
+     "qrsOn": 847,
+     "qrsOff": 894,
+     "tPeak": 981,
+     "tOff": 1043
+    },
+    "ms": {
+     "pOn": 1556.0,
+     "pPeak": 1616.0,
+     "pOff": 1678.0,
+     "qrsOn": 1694.0,
+     "qrsOff": 1788.0,
+     "r": 1734.0,
+     "tPeak": 1962.0,
+     "tOff": 2086.0
+    },
+    "rrMs": 808.0,
+    "confidence": 0.998,
+    "flags": []
+   },
+   {
+    "index": 3,
+    "rSample": 1282,
+    "samples": {
+     "pOn": 1191,
+     "pPeak": 1221,
+     "pOff": 1253,
+     "qrsOn": 1261,
+     "qrsOff": 1308,
+     "tPeak": 1397,
+     "tOff": 1460
+    },
+    "ms": {
+     "pOn": 2382.0,
+     "pPeak": 2442.0,
+     "pOff": 2506.0,
+     "qrsOn": 2522.0,
+     "qrsOff": 2616.0,
+     "r": 2564.0,
+     "tPeak": 2794.0,
+     "tOff": 2920.0
+    },
+    "rrMs": 830.0,
+    "confidence": 0.998,
+    "flags": []
+   },
+   {
+    "index": 4,
+    "rSample": 1700,
+    "samples": {
+     "pOn": 1589,
+     "pPeak": 1640,
+     "pOff": 1670,
+     "qrsOn": 1680,
+     "qrsOff": 1726,
+     "tPeak": 1815,
+     "tOff": 1878
+    },
+    "ms": {
+     "pOn": 3178.0,
+     "pPeak": 3280.0,
+     "pOff": 3340.0,
+     "qrsOn": 3360.0,
+     "qrsOff": 3452.0,
+     "r": 3400.0,
+     "tPeak": 3630.0,
+     "tOff": 3756.0
+    },
+    "rrMs": 836.0,
+    "confidence": 0.999,
+    "flags": []
+   },
+   {
+    "index": 5,
+    "rSample": 2112,
+    "samples": {
+     "pOn": 2021,
+     "pPeak": 2051,
+     "pOff": 2083,
+     "qrsOn": 2092,
+     "qrsOff": 2139,
+     "tPeak": 2226,
+     "tOff": 2289
+    },
+    "ms": {
+     "pOn": 4042.0,
+     "pPeak": 4102.0,
+     "pOff": 4166.0,
+     "qrsOn": 4184.0,
+     "qrsOff": 4278.0,
+     "r": 4224.0,
+     "tPeak": 4452.0,
+     "tOff": 4578.0
+    },
+    "rrMs": 824.0,
+    "confidence": 0.999,
+    "flags": []
+   },
+   {
+    "index": 6,
+    "rSample": 2535,
+    "samples": {
+     "pOn": 2443,
+     "pPeak": 2474,
+     "pOff": 2514,
+     "qrsOn": 2515,
+     "qrsOff": 2561,
+     "tPeak": 2650,
+     "tOff": 2713
+    },
+    "ms": {
+     "pOn": 4886.0,
+     "pPeak": 4948.0,
+     "pOff": 5028.0,
+     "qrsOn": 5030.0,
+     "qrsOff": 5122.0,
+     "r": 5070.0,
+     "tPeak": 5300.0,
+     "tOff": 5426.0
+    },
+    "rrMs": 846.0,
+    "confidence": 1.0,
+    "flags": []
+   },
+   {
+    "index": 7,
+    "rSample": 2962,
+    "samples": {
+     "pOn": 2869,
+     "pPeak": 2900,
+     "pOff": 2931,
+     "qrsOn": 2942,
+     "qrsOff": 2988,
+     "tPeak": 3078,
+     "tOff": 3140
+    },
+    "ms": {
+     "pOn": 5738.0,
+     "pPeak": 5800.0,
+     "pOff": 5862.0,
+     "qrsOn": 5884.0,
+     "qrsOff": 5976.0,
+     "r": 5924.0,
+     "tPeak": 6156.0,
+     "tOff": 6280.0
+    },
+    "rrMs": 854.0,
+    "confidence": 0.999,
+    "flags": []
+   },
+   {
+    "index": 8,
+    "rSample": 3388,
+    "samples": {
+     "pOn": 3294,
+     "pPeak": 3327,
+     "pOff": 3360,
+     "qrsOn": 3368,
+     "qrsOff": 3415,
+     "tPeak": 3504,
+     "tOff": 3567
+    },
+    "ms": {
+     "pOn": 6588.0,
+     "pPeak": 6654.0,
+     "pOff": 6720.0,
+     "qrsOn": 6736.0,
+     "qrsOff": 6830.0,
+     "r": 6776.0,
+     "tPeak": 7008.0,
+     "tOff": 7134.0
+    },
+    "rrMs": 852.0,
+    "confidence": 0.998,
+    "flags": []
+   },
+   {
+    "index": 9,
+    "rSample": 3808,
+    "samples": {
+     "pOn": 3717,
+     "pPeak": 3746,
+     "pOff": 3780,
+     "qrsOn": 3788,
+     "qrsOff": 3834,
+     "tPeak": 3922,
+     "tOff": 3985
+    },
+    "ms": {
+     "pOn": 7434.0,
+     "pPeak": 7492.0,
+     "pOff": 7560.0,
+     "qrsOn": 7576.0,
+     "qrsOff": 7668.0,
+     "r": 7616.0,
+     "tPeak": 7844.0,
+     "tOff": 7970.0
+    },
+    "rrMs": 840.0,
+    "confidence": 0.999,
+    "flags": []
+   },
+   {
+    "index": 10,
+    "rSample": 4232,
+    "samples": {
+     "pOn": 4140,
+     "pPeak": 4172,
+     "pOff": 4207,
+     "qrsOn": 4212,
+     "qrsOff": 4259,
+     "tPeak": 4348,
+     "tOff": 4421
+    },
+    "ms": {
+     "pOn": 8280.0,
+     "pPeak": 8344.0,
+     "pOff": 8414.0,
+     "qrsOn": 8424.0,
+     "qrsOff": 8518.0,
+     "r": 8464.0,
+     "tPeak": 8696.0,
+     "tOff": 8842.0
+    },
+    "rrMs": 848.0,
+    "confidence": 1.0,
+    "flags": []
+   },
+   {
+    "index": 11,
+    "rSample": 4650,
+    "samples": {
+     "pOn": 4558,
+     "pPeak": 4591,
+     "pOff": 4620,
+     "qrsOn": 4630,
+     "qrsOff": 4677,
+     "tPeak": 4764,
+     "tOff": 4828
+    },
+    "ms": {
+     "pOn": 9116.0,
+     "pPeak": 9182.0,
+     "pOff": 9240.0,
+     "qrsOn": 9260.0,
+     "qrsOff": 9354.0,
+     "r": 9300.0,
+     "tPeak": 9528.0,
+     "tOff": 9656.0
+    },
+    "rrMs": 836.0,
+    "confidence": 0.999,
+    "flags": []
+   }
+  ],
+  "summary": {
+   "rrMs": 836.0,
+   "heartRateBpm": 71.77,
+   "prMs": 144.0,
+   "pDurationMs": 124.0,
+   "qrsMs": 94.0,
+   "qtMs": 396.0,
+   "beatCount": 12,
+   "medianTemplateCorrelation": 1.0,
+   "rrCoefficientOfVariation": 0.02,
+   "rmssdMs": 12.77,
+   "detectionSnr": 17.96,
+   "qrsRrFraction": 0.11
+  },
+  "warnings": [
+   {
+    "code": "PACE_MARKS",
+    "severity": "warning",
+    "message": "9 pacemaker-spike marks are present in the source file. If this is a paced rhythm the conduction model does not apply; if they are artefact, signal quality is poor.",
+    "detail": {
+     "count": 9
+    }
+   }
+  ],
+  "usable": true,
+  "modelApplicable": false
+ },
+ "metrics": {
+  "intervals": {
+   "rrMs": 836.0,
+   "heartRateBpm": 71.7703,
+   "prMs": 144.0,
+   "pDurationMs": 124.0,
+   "qrsMs": 94.0,
+   "qtMs": 396.0,
+   "qtcBazettMs": 433.1039,
+   "qtcFridericiaMs": 420.3649,
+   "qtcNote": "Bazett over-corrects at high heart rates and under-corrects at low ones; Fridericia is shown alongside it. Neither is 'the' QTc.",
+   "beatCount": 12,
+   "rrCoefficientOfVariation": 0.0169,
+   "rmssdMs": 12.775,
+   "deviceReported": {
+    "prMs": 138.0,
+    "qrsMs": 86.0,
+    "qtMs": 388.0,
+    "qtcMs": 424.0,
+    "qtcCorrection": "Bazett",
+    "pDurationMs": 98.0,
+    "rrMs": 834.0,
+    "note": "Reported by the acquisition device algorithm, shown for comparison with our own delineation. Neither is ground truth."
+   }
+  },
+  "axes": {
+   "frontalQrsAxisDeg": -13.7621,
+   "frontalQrsAxisMethod": "atan2(net QRS area in aVF, net QRS area in I)",
+   "frontalQrsAxisFromVcgDeg": 6.8098,
+   "frontalTAxisFromVcgDeg": 51.7448,
+   "qrsAzimuthDeg": 45.612,
+   "qrsElevationDeg": 4.775,
+   "tAzimuthDeg": -75.5732,
+   "tElevationDeg": 17.5353,
+   "spatialQrsTAngleDeg": 117.8365,
+   "peakQrsTAngleDeg": 39.4579,
+   "deviceReported": {
+    "pAxisDeg": 50.0,
+    "qrsAxisDeg": 19.0,
+    "tAxisDeg": 46.0
+   }
+  },
+  "loops": {
+   "qrs": {
+    "planarityRatio": 0.0243,
+    "normal": [
+     -0.4621,
+     0.8645,
+     0.1978
+    ],
+    "singularValues": [
+     3.9787,
+     3.3858,
+     0.1836
+    ],
+    "areaFrontalMvSq": 0.3853,
+    "areaHorizontalMvSq": 1.8573,
+    "areaSagittalMvSq": 1.0328,
+    "maxMagnitudeMv": 1.469,
+    "timeToMaxMs": 40.0
+   },
+   "t": {
+    "planarityRatio": 0.0549,
+    "normal": [
+     0.7683,
+     -0.5618,
+     0.3066
+    ],
+    "singularValues": [
+     1.4245,
+     0.4455,
+     0.1087
+    ],
+    "areaFrontalMvSq": 0.0062,
+    "maxMagnitudeMv": 0.2501
+   },
+   "representativeBeatIndex": 10
+  },
+  "vectors": {
+   "meanQrsMv": [
+    0.1876,
+    0.0224,
+    0.1917
+   ],
+   "meanTMv": [
+    0.0229,
+    0.029,
+    -0.0889
+   ],
+   "peakQrsMv": [
+    1.3232,
+    0.6769,
+    -0.0839
+   ],
+   "peakQrsMagnitudeMv": 1.4886,
+   "peakTMv": [
+    0.1466,
+    0.1509,
+    -0.1692
+   ],
+   "peakTMagnitudeMv": 0.27
+  },
+  "provenance": {
+   "tier": 2,
+   "vcgMethod": "kors",
+   "vcgCitation": "Kors JA et al., Eur Heart J 1990;11(12):1083-1092 (regression transform)",
+   "beatsUsed": 12,
+   "note": "Derived from this recording by linear transform of the 8 independent leads. Patient-specific, but a single equivalent dipole - not a map of where in the myocardium current is flowing."
+  }
+ },
+ "vcg": {
+  "primary": {
+   "method": "kors",
+   "citation": "Kors JA et al., Eur Heart J 1990;11(12):1083-1092 (regression transform)",
+   "units": "mV",
+   "frame": "x=left, y=inferior, z=posterior"
+  },
+  "alternate": {
+   "method": "inverse_dower",
+   "citation": "Edenbrandt L, Pahlm O, J Electrocardiol 1988;21(4):361-367 (inverse Dower matrix)",
+   "units": "mV",
+   "frame": "x=left, y=inferior, z=posterior"
+  },
+  "comparison": {
+   "r_x": 0.9816004085405852,
+   "r_y": 0.9965045518156471,
+   "r_z": 0.9545956081493762,
+   "meanAbsDiffMv": 0.0464472580438605,
+   "maxAbsDiffMv": 0.5739505145010919,
+   "relativeRms": 0.2755056575520141,
+   "methodA": "kors",
+   "methodB": "inverse_dower"
+  },
+  "methodNotes": {
+   "kors": "Regression-derived on real Frank recordings; usually closest to a true Frank VCG.",
+   "inverse_dower": "Pseudo-inverse of the Dower forward matrix; the classical synthesis.",
+   "naive_pinv": "Assumes idealised, patient-independent lead directions and an infinite homogeneous torso. Included so the error it makes is visible."
+  },
+  "citations": {
+   "kors": "Kors JA et al., Eur Heart J 1990;11(12):1083-1092 (regression transform)",
+   "inverse_dower": "Edenbrandt L, Pahlm O, J Electrocardiol 1988;21(4):361-367 (inverse Dower matrix)",
+   "naive_pinv": "Least-squares inverse of textbook lead vectors (Einthoven hexaxial + classical precordial angles). Teaching baseline only - see METHODS.md for why it is inferior."
+  }
+ },
+ "conduction": {
+  "tier": 3,
+  "regions": [
+   {
+    "key": "ra",
+    "label": "Right atrium (SA node spread)",
+    "chamber": "atria",
+    "direction": [
+     0.3,
+     0.85,
+     -0.3
+    ],
+    "weight": 0.1,
+    "silent": false,
+    "note": "Impulse leaves the SA node and sweeps down and left across the RA."
+   },
+   {
+    "key": "la",
+    "label": "Left atrium",
+    "chamber": "atria",
+    "direction": [
+     0.6,
+     0.4,
+     0.6
+    ],
+    "weight": 0.1,
+    "silent": false,
+    "note": "LA activates later and more posteriorly - the second half of the P wave."
+   },
+   {
+    "key": "av",
+    "label": "AV node (conduction delay)",
+    "chamber": "conduction",
+    "direction": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "weight": 0.0,
+    "silent": true,
+    "note": "Electrically silent at the body surface. Its delay IS the PR segment; duration is filled in per beat from the measured PR interval."
+   },
+   {
+    "key": "his",
+    "label": "His bundle and bundle branches",
+    "chamber": "conduction",
+    "direction": [
+     0.0,
+     0.5,
+     -0.2
+    ],
+    "weight": 0.02,
+    "silent": false,
+    "note": "Too little tissue to register on the surface ECG."
+   },
+   {
+    "key": "septum",
+    "label": "Interventricular septum (left to right)",
+    "chamber": "ventricles",
+    "direction": [
+     -0.7,
+     -0.2,
+     -0.65
+    ],
+    "weight": 0.15,
+    "silent": false,
+    "note": "The septum depolarises left-to-right first: the septal q in I and V6, the small r in V1."
+   },
+   {
+    "key": "rv",
+    "label": "Right ventricular free wall",
+    "chamber": "ventricles",
+    "direction": [
+     -0.4,
+     0.3,
+     -0.85
+    ],
+    "weight": 0.2,
+    "silent": false,
+    "note": "Thin wall, small vector, largely cancelled by the much larger LV."
+   },
+   {
+    "key": "lv",
+    "label": "Left ventricular free wall (endo to epi, apex to base)",
+    "chamber": "ventricles",
+    "direction": [
+     0.75,
+     0.45,
+     0.45
+    ],
+    "weight": 1.0,
+    "silent": false,
+    "note": "The dominant vector of the whole QRS - left, inferior and posterior."
+   },
+   {
+    "key": "lv_basal",
+    "label": "Basal / posterior LV (last to depolarise)",
+    "chamber": "ventricles",
+    "direction": [
+     0.4,
+     -0.5,
+     0.75
+    ],
+    "weight": 0.25,
+    "silent": false,
+    "note": "The last myocardium to activate; the terminal QRS forces."
+   }
+  ],
+  "referenceQrsMs": 85.0,
+  "agreement": {
+   "qrs": {
+    "r_x": 0.7225100443360786,
+    "r_y": 0.6994538740824399,
+    "r_z": 0.7336145797892056,
+    "r_overall": 0.7009696532813168
+   },
+   "wholeBeat": {
+    "r_x": 0.7103458099364336,
+    "r_y": 0.5769389723891054,
+    "r_z": 0.720315622281249,
+    "r_overall": 0.6734721824908797
+   },
+   "verdict": "The textbook sequence only partly reproduces this patient's measured vector. Treat the spatial sweep as a teaching cartoon here.",
+   "note": "Correlation between the dipole implied by the Tier-3 model and the Tier-2 dipole measured from this recording."
+  },
+  "applicable": false,
+  "caveats": [
+   "Region shapes, ordering and directions are textbook physiology, identical for every patient. Only the timing comes from this recording.",
+   "9 pacemaker-spike marks are present in the source file. If this is a paced rhythm the conduction model does not apply; if they are artefact, signal quality is poor."
+  ],
+  "badge": "Conduction model - illustrative, not patient-specific reconstruction"
+ },
+ "conductionSchedule": [
+  {
+   "beatIndex": 0,
+   "regions": {
+    "ra": {
+     "onsetMs": -160.0,
+     "durationMs": 38.0,
+     "anchoredTo": "pOn"
+    },
+    "la": {
+     "onsetMs": -122.0,
+     "durationMs": 62.0,
+     "anchoredTo": "pOn"
+    },
+    "av": {
+     "onsetMs": -60.0,
+     "durationMs": 60.0,
+     "anchoredTo": "pOff"
+    },
+    "his": {
+     "onsetMs": -12.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "septum": {
+     "onsetMs": 0.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "rv": {
+     "onsetMs": 16.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv": {
+     "onsetMs": 22.0,
+     "durationMs": 50.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv_basal": {
+     "onsetMs": 60.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    }
+   }
+  },
+  {
+   "beatIndex": 1,
+   "regions": {
+    "ra": {
+     "onsetMs": -144.0,
+     "durationMs": 38.0,
+     "anchoredTo": "pOn"
+    },
+    "la": {
+     "onsetMs": -106.0,
+     "durationMs": 62.0,
+     "anchoredTo": "pOn"
+    },
+    "av": {
+     "onsetMs": -24.0,
+     "durationMs": 24.0,
+     "anchoredTo": "pOff"
+    },
+    "his": {
+     "onsetMs": -12.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "septum": {
+     "onsetMs": 0.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "rv": {
+     "onsetMs": 16.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv": {
+     "onsetMs": 22.0,
+     "durationMs": 50.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv_basal": {
+     "onsetMs": 60.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    }
+   }
+  },
+  {
+   "beatIndex": 2,
+   "regions": {
+    "ra": {
+     "onsetMs": -138.0,
+     "durationMs": 38.0,
+     "anchoredTo": "pOn"
+    },
+    "la": {
+     "onsetMs": -100.0,
+     "durationMs": 62.0,
+     "anchoredTo": "pOn"
+    },
+    "av": {
+     "onsetMs": -16.0,
+     "durationMs": 16.0,
+     "anchoredTo": "pOff"
+    },
+    "his": {
+     "onsetMs": -12.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "septum": {
+     "onsetMs": 0.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "rv": {
+     "onsetMs": 16.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv": {
+     "onsetMs": 22.0,
+     "durationMs": 50.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv_basal": {
+     "onsetMs": 60.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    }
+   }
+  },
+  {
+   "beatIndex": 3,
+   "regions": {
+    "ra": {
+     "onsetMs": -140.0,
+     "durationMs": 38.0,
+     "anchoredTo": "pOn"
+    },
+    "la": {
+     "onsetMs": -102.0,
+     "durationMs": 62.0,
+     "anchoredTo": "pOn"
+    },
+    "av": {
+     "onsetMs": -16.0,
+     "durationMs": 16.0,
+     "anchoredTo": "pOff"
+    },
+    "his": {
+     "onsetMs": -12.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "septum": {
+     "onsetMs": 0.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "rv": {
+     "onsetMs": 16.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv": {
+     "onsetMs": 22.0,
+     "durationMs": 50.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv_basal": {
+     "onsetMs": 60.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    }
+   }
+  },
+  {
+   "beatIndex": 4,
+   "regions": {
+    "ra": {
+     "onsetMs": -182.0,
+     "durationMs": 38.0,
+     "anchoredTo": "pOn"
+    },
+    "la": {
+     "onsetMs": -144.0,
+     "durationMs": 62.0,
+     "anchoredTo": "pOn"
+    },
+    "av": {
+     "onsetMs": -20.0,
+     "durationMs": 20.0,
+     "anchoredTo": "pOff"
+    },
+    "his": {
+     "onsetMs": -12.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "septum": {
+     "onsetMs": 0.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "rv": {
+     "onsetMs": 16.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv": {
+     "onsetMs": 22.0,
+     "durationMs": 50.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv_basal": {
+     "onsetMs": 60.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    }
+   }
+  },
+  {
+   "beatIndex": 5,
+   "regions": {
+    "ra": {
+     "onsetMs": -142.0,
+     "durationMs": 38.0,
+     "anchoredTo": "pOn"
+    },
+    "la": {
+     "onsetMs": -104.0,
+     "durationMs": 62.0,
+     "anchoredTo": "pOn"
+    },
+    "av": {
+     "onsetMs": -18.0,
+     "durationMs": 18.0,
+     "anchoredTo": "pOff"
+    },
+    "his": {
+     "onsetMs": -12.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "septum": {
+     "onsetMs": 0.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "rv": {
+     "onsetMs": 16.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv": {
+     "onsetMs": 22.0,
+     "durationMs": 50.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv_basal": {
+     "onsetMs": 60.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    }
+   }
+  },
+  {
+   "beatIndex": 6,
+   "regions": {
+    "ra": {
+     "onsetMs": -144.0,
+     "durationMs": 38.0,
+     "anchoredTo": "pOn"
+    },
+    "la": {
+     "onsetMs": -106.0,
+     "durationMs": 62.0,
+     "anchoredTo": "pOn"
+    },
+    "av": {
+     "onsetMs": -2.0,
+     "durationMs": 2.0,
+     "anchoredTo": "pOff"
+    },
+    "his": {
+     "onsetMs": -12.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "septum": {
+     "onsetMs": 0.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "rv": {
+     "onsetMs": 16.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv": {
+     "onsetMs": 22.0,
+     "durationMs": 50.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv_basal": {
+     "onsetMs": 60.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    }
+   }
+  },
+  {
+   "beatIndex": 7,
+   "regions": {
+    "ra": {
+     "onsetMs": -146.0,
+     "durationMs": 38.0,
+     "anchoredTo": "pOn"
+    },
+    "la": {
+     "onsetMs": -108.0,
+     "durationMs": 62.0,
+     "anchoredTo": "pOn"
+    },
+    "av": {
+     "onsetMs": -22.0,
+     "durationMs": 22.0,
+     "anchoredTo": "pOff"
+    },
+    "his": {
+     "onsetMs": -12.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "septum": {
+     "onsetMs": 0.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "rv": {
+     "onsetMs": 16.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv": {
+     "onsetMs": 22.0,
+     "durationMs": 50.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv_basal": {
+     "onsetMs": 60.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    }
+   }
+  },
+  {
+   "beatIndex": 8,
+   "regions": {
+    "ra": {
+     "onsetMs": -148.0,
+     "durationMs": 38.0,
+     "anchoredTo": "pOn"
+    },
+    "la": {
+     "onsetMs": -110.0,
+     "durationMs": 62.0,
+     "anchoredTo": "pOn"
+    },
+    "av": {
+     "onsetMs": -16.0,
+     "durationMs": 16.0,
+     "anchoredTo": "pOff"
+    },
+    "his": {
+     "onsetMs": -12.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "septum": {
+     "onsetMs": 0.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "rv": {
+     "onsetMs": 16.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv": {
+     "onsetMs": 22.0,
+     "durationMs": 50.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv_basal": {
+     "onsetMs": 60.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    }
+   }
+  },
+  {
+   "beatIndex": 9,
+   "regions": {
+    "ra": {
+     "onsetMs": -142.0,
+     "durationMs": 38.0,
+     "anchoredTo": "pOn"
+    },
+    "la": {
+     "onsetMs": -104.0,
+     "durationMs": 62.0,
+     "anchoredTo": "pOn"
+    },
+    "av": {
+     "onsetMs": -16.0,
+     "durationMs": 16.0,
+     "anchoredTo": "pOff"
+    },
+    "his": {
+     "onsetMs": -12.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "septum": {
+     "onsetMs": 0.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "rv": {
+     "onsetMs": 16.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv": {
+     "onsetMs": 22.0,
+     "durationMs": 50.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv_basal": {
+     "onsetMs": 60.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    }
+   }
+  },
+  {
+   "beatIndex": 10,
+   "regions": {
+    "ra": {
+     "onsetMs": -144.0,
+     "durationMs": 38.0,
+     "anchoredTo": "pOn"
+    },
+    "la": {
+     "onsetMs": -106.0,
+     "durationMs": 62.0,
+     "anchoredTo": "pOn"
+    },
+    "av": {
+     "onsetMs": -10.0,
+     "durationMs": 10.0,
+     "anchoredTo": "pOff"
+    },
+    "his": {
+     "onsetMs": -12.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "septum": {
+     "onsetMs": 0.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "rv": {
+     "onsetMs": 16.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv": {
+     "onsetMs": 22.0,
+     "durationMs": 50.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv_basal": {
+     "onsetMs": 60.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    }
+   }
+  },
+  {
+   "beatIndex": 11,
+   "regions": {
+    "ra": {
+     "onsetMs": -144.0,
+     "durationMs": 38.0,
+     "anchoredTo": "pOn"
+    },
+    "la": {
+     "onsetMs": -106.0,
+     "durationMs": 62.0,
+     "anchoredTo": "pOn"
+    },
+    "av": {
+     "onsetMs": -20.0,
+     "durationMs": 20.0,
+     "anchoredTo": "pOff"
+    },
+    "his": {
+     "onsetMs": -12.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "septum": {
+     "onsetMs": 0.0,
+     "durationMs": 16.0,
+     "anchoredTo": "qrsOn"
+    },
+    "rv": {
+     "onsetMs": 16.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv": {
+     "onsetMs": 22.0,
+     "durationMs": 50.0,
+     "anchoredTo": "qrsOn"
+    },
+    "lv_basal": {
+     "onsetMs": 60.0,
+     "durationMs": 28.0,
+     "anchoredTo": "qrsOn"
+    }
+   }
+  }
+ ],
+ "tiers": {
+  "1": {
+   "name": "MEASURED",
+   "label": "Measured in this recording",
+   "dismissible": true
+  },
+  "2": {
+   "name": "DERIVED",
+   "label": "Derived from this recording",
+   "dismissible": true
+  },
+  "3": {
+   "name": "ILLUSTRATIVE",
+   "label": "Conduction model \u2014 illustrative, not patient-specific reconstruction",
+   "dismissible": false
+  }
+ },
+ "binaries": {
+  "leads": {
+   "file": "leads.f32",
+   "shape": [
+    12,
+    5000
+   ],
+   "dtype": "float32",
+   "order": "row-major",
+   "leads": [
+    "I",
+    "II",
+    "III",
+    "aVR",
+    "aVL",
+    "aVF",
+    "V1",
+    "V2",
+    "V3",
+    "V4",
+    "V5",
+    "V6"
+   ],
+   "units": "mV",
+   "sampleRateHz": 500.0,
+   "tier": 1
+  },
+  "leadsRaw": {
+   "file": "leads_raw.f32",
+   "shape": [
+    12,
+    5000
+   ],
+   "dtype": "float32",
+   "order": "row-major",
+   "leads": [
+    "I",
+    "II",
+    "III",
+    "aVR",
+    "aVL",
+    "aVF",
+    "V1",
+    "V2",
+    "V3",
+    "V4",
+    "V5",
+    "V6"
+   ],
+   "units": "mV",
+   "sampleRateHz": 500.0,
+   "tier": 1
+  },
+  "vcg": {
+   "file": "vcg.f32",
+   "shape": [
+    3,
+    5000
+   ],
+   "dtype": "float32",
+   "order": "row-major",
+   "axes": [
+    "x",
+    "y",
+    "z"
+   ],
+   "units": "mV",
+   "sampleRateHz": 500.0,
+   "tier": 2,
+   "method": "kors",
+   "citation": "Kors JA et al., Eur Heart J 1990;11(12):1083-1092 (regression transform)"
+  },
+  "vcgAlt": {
+   "file": "vcg_alt.f32",
+   "shape": [
+    3,
+    5000
+   ],
+   "dtype": "float32",
+   "order": "row-major",
+   "axes": [
+    "x",
+    "y",
+    "z"
+   ],
+   "units": "mV",
+   "sampleRateHz": 500.0,
+   "tier": 2,
+   "method": "inverse_dower",
+   "citation": "Edenbrandt L, Pahlm O, J Electrocardiol 1988;21(4):361-367 (inverse Dower matrix)"
+  },
+  "conduction": {
+   "file": "conduction.f32",
+   "shape": [
+    16,
+    5000
+   ],
+   "dtype": "float32",
+   "order": "row-major",
+   "tier": 3,
+   "sampleRateHz": 500.0,
+   "regions": [
+    "ra",
+    "la",
+    "av",
+    "his",
+    "septum",
+    "rv",
+    "lv",
+    "lv_basal"
+   ],
+   "layout": "rows 0..R-1 = depolarised fraction, rows R..2R-1 = repolarised fraction"
+  },
+  "modelVcg": {
+   "file": "model_vcg.f32",
+   "shape": [
+    3,
+    5000
+   ],
+   "dtype": "float32",
+   "order": "row-major",
+   "axes": [
+    "x",
+    "y",
+    "z"
+   ],
+   "units": "mV (arbitrary scale)",
+   "sampleRateHz": 500.0,
+   "tier": 3
+  },
+  "medianBeat": {
+   "file": "median.f32",
+   "shape": [
+    12,
+    600
+   ],
+   "dtype": "float32",
+   "order": "row-major",
+   "leads": [
+    "I",
+    "II",
+    "III",
+    "aVR",
+    "aVL",
+    "aVF",
+    "V1",
+    "V2",
+    "V3",
+    "V4",
+    "V5",
+    "V6"
+   ],
+   "units": "mV",
+   "tier": 1,
+   "sampleRateHz": 500.0,
+   "note": "Device-computed median/representative beat."
+  }
+ },
+ "notes": []
+}

@@ -1,0 +1,82 @@
+import { Suspense, useEffect, useRef } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
+import { GizmoHelper, GizmoViewport, Grid, OrbitControls } from "@react-three/drei";
+import * as THREE from "three";
+import { CAMERA_PRESETS, TORSO_RADIUS } from "../../lib/geometry";
+import { useStore } from "../../lib/store";
+import { HeartScene } from "./HeartScene";
+import { LeadAxes, LeadProjection } from "./LeadProjection";
+import { VcgLoop } from "./VcgLoop";
+import { SceneLabels } from "./SceneLabels";
+import { VectorArrow } from "./VectorArrow";
+
+function CameraRig() {
+  const preset = useStore((s) => s.cameraPreset);
+  const { camera } = useThree();
+  const controls = useRef<any>(null);
+
+  useEffect(() => {
+    const p = CAMERA_PRESETS[preset];
+    if (!p) return;
+    camera.position.set(...p.position);
+    camera.up.set(0, 1, 0);
+    camera.lookAt(0, 0, 0);
+    controls.current?.target.set(0, 0, 0);
+    controls.current?.update();
+  }, [preset, camera]);
+
+  return <OrbitControls ref={controls} enablePan={false} minDistance={2.5} maxDistance={18} />;
+}
+
+/** A translucent shell standing in for the torso, so the lead axes have
+ *  somewhere to end and the viewer keeps their bearings. */
+function TorsoShell() {
+  return (
+    <group>
+      <mesh scale={[TORSO_RADIUS * 0.98, TORSO_RADIUS * 1.2, TORSO_RADIUS * 0.6]}>
+        <sphereGeometry args={[1, 32, 24]} />
+        <meshBasicMaterial color="#5b6a86" wireframe transparent opacity={0.12} />
+      </mesh>
+    </group>
+  );
+}
+
+export function Scene() {
+  const showAllLeadAxes = useStore((s) => s.showAllLeadAxes);
+
+  return (
+    <Canvas
+      camera={{ position: CAMERA_PRESETS.oblique.position, fov: 42, near: 0.1, far: 100 }}
+      dpr={[1, 2]}
+      gl={{ antialias: true }}
+      onCreated={({ gl }) => gl.setClearColor(new THREE.Color("#0c0e13"))}
+    >
+      <ambientLight intensity={0.55} />
+      <directionalLight position={[4, 6, 8]} intensity={1.1} />
+      <directionalLight position={[-6, -3, -6]} intensity={0.35} color="#a8c7fa" />
+
+      <Suspense fallback={null}>
+        <HeartScene />
+        <VcgLoop />
+        <VectorArrow />
+        <LeadProjection />
+        {showAllLeadAxes && <LeadAxes />}
+        <TorsoShell />
+        <SceneLabels />
+      </Suspense>
+
+      <Grid
+        args={[20, 20]}
+        position={[0, -TORSO_RADIUS * 1.2, 0]}
+        cellColor="#282a2f"
+        sectionColor="#43474e"
+        fadeDistance={26}
+        infiniteGrid
+      />
+      <GizmoHelper alignment="bottom-right" margin={[64, 64]}>
+        <GizmoViewport labelColor="white" axisHeadScale={0.9} />
+      </GizmoHelper>
+      <CameraRig />
+    </Canvas>
+  );
+}

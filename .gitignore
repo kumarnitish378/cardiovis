@@ -1,0 +1,26 @@
+# Original, identifiable recordings. NEVER commit these.
+# De-identified copies belong in data/samples/ (see PRIVACY.md).
+data/*.xml
+!data/samples/
+data/*.scp
+data/*.dcm
+data/*.hea
+data/*.dat
+
+# Local de-identification salt - keeps pseudonymous IDs stable per machine.
+.cardiovis/
+
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+node_modules/
+web/dist/
+web/.vite/
+
+scratch/
+*.png
+!docs/**/*.png

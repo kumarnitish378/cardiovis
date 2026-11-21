@@ -145,7 +145,8 @@ export const useStore = create<State>((set, get) => ({
   traceMode: (typeof localStorage !== "undefined"
     ? ((localStorage.getItem(TRACE_MODE_KEY) as TraceMode | null) ?? "all")
     : "all"),
-  traceHeight: restore(TRACE_HEIGHT_KEY, 230),
+  // Default leaves the 3D stage the larger share on short (projector) screens.
+  traceHeight: restore(TRACE_HEIGHT_KEY, typeof window !== "undefined" ? Math.round(Math.min(230, window.innerHeight * 0.24)) : 230),
   tracesFullHeight: null,
   sidebarOpen: true,
   controlsExpanded: false,

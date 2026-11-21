@@ -112,66 +112,81 @@ body {
   height: 100%;
 }
 
-/* ===== top app bar ======================================================= */
+/* ===== top app bar =======================================================
+   One compact row: identity, what you are looking at, and the advisory.
+   Everything else is taken out of the bar so the stage gets the height. */
 
 header {
   display: flex;
   align-items: center;
-  gap: 24px;
-  min-height: 64px;
-  padding: 8px 16px;
+  gap: 20px;
+  height: 56px;
+  padding: 0 16px;
   background: var(--md-surface-container);
   border-bottom: 1px solid var(--md-outline-variant);
-  flex-wrap: wrap;
+  flex: none;
+  overflow: hidden;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  flex: none;
 }
-
+.brand-mark {
+  width: 28px;
+  height: 28px;
+  color: var(--md-primary);
+}
 .brand h1 {
   /* title-large */
-  font-size: 22px;
+  font-size: 20px;
   line-height: 28px;
   letter-spacing: 0;
   font-weight: 500;
   margin: 0;
 }
 
-/* M3 text button, tinted as a persistent advisory */
+/* Persistent advisory: an M3 assist chip on the tertiary role. It cannot be
+   dismissed; clicking it opens the Limits tab. */
 .disclaimer {
-  color: var(--md-tertiary);
-  background: none;
-  border: 1px solid transparent;
-  border-radius: var(--md-shape-full);
-  padding: 6px 12px;
-  height: auto;
+  margin-left: auto;
+  flex: none;
+  color: var(--md-on-tertiary-container);
+  background: color-mix(in srgb, var(--md-tertiary-container) 55%, transparent);
+  border: 1px solid color-mix(in srgb, var(--md-tertiary) 55%, transparent);
+  border-radius: var(--md-shape-s);
+  height: 32px;
+  padding: 0 12px;
   font-size: 12px;
-  line-height: 16px;
-  letter-spacing: 0.4px;
-  font-weight: 400;
-  text-align: left;
-  max-width: 470px;
-  cursor: pointer;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
 }
 .disclaimer:hover {
-  background: color-mix(in srgb, var(--md-tertiary) 8%, transparent);
-  border-color: transparent;
+  background: color-mix(in srgb, var(--md-tertiary-container) 80%, transparent);
+  border-color: var(--md-tertiary);
 }
 
 .case-meta {
-  margin-left: auto;
-  text-align: right;
-  display: grid;
-  gap: 2px;
+  display: flex;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
 }
-.case-meta > span:first-child {
-  /* title-small */
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0.1px;
+.meta-chip {
+  flex: none;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: var(--md-shape-full);
+  background: var(--md-surface-container-high);
+  color: var(--md-on-surface-variant);
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
 }
 .dim {
   color: var(--md-on-surface-variant);
@@ -185,24 +200,30 @@ header {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
 }
 .library label {
   color: var(--md-on-surface-variant);
   font-size: 11px;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
 }
 .library select {
   background: var(--md-surface-container-high);
   color: var(--md-on-surface);
-  border: 1px solid var(--md-outline);
+  border: 1px solid var(--md-outline-variant);
   border-radius: var(--md-shape-s);
-  padding: 8px 12px;
-  min-width: 340px;
+  height: 36px;
+  padding: 0 12px;
+  width: 400px;
+  max-width: 34vw;
   font: inherit;
+  font-weight: 500;
 }
-.library select:hover {
+.library select:hover,
+.library select:focus-visible {
   border-color: var(--md-primary);
+  outline: none;
 }
 
 /* ===== layout ============================================================ */
@@ -210,7 +231,7 @@ header {
 main {
   flex: 1;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) var(--sidebar-width, 384px);
+  grid-template-columns: minmax(0, 1fr) var(--sidebar-width, 400px);
   min-height: 0;
   position: relative;
   background: var(--md-surface);
@@ -223,7 +244,8 @@ main {
      sizes itself to that stale width - which pushed the whole row out under the
      sidebar and made the controls unclickable. */
   grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: minmax(160px, 1fr) auto var(--trace-height, 230px) auto;
+  /* toolbar | 3D stage | transport | divider | traces */
+  grid-template-rows: auto minmax(200px, 1fr) auto auto var(--trace-height, 230px);
   min-height: 0;
   min-width: 0;
   overflow: hidden;
@@ -236,11 +258,11 @@ main {
   display: none;
 }
 
-/* M3 icon button */
+/* M3 icon button, docked to the sidebar edge */
 .sidebar-toggle {
   position: absolute;
-  top: 8px;
-  right: var(--sidebar-width, 384px);
+  top: 6px;
+  right: var(--sidebar-width, 400px);
   z-index: 5;
   width: 24px;
   height: 40px;
@@ -255,12 +277,119 @@ main {
   right: 0;
 }
 
+/* --- stage toolbar: what to look at (lead) and from where (view) ---------- */
+
+.stage-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 40px 8px 12px;
+  background: var(--md-surface-container-low);
+  border-bottom: 1px solid var(--md-outline-variant);
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+.stage-toolbar::-webkit-scrollbar {
+  display: none;
+}
+.group-label {
+  color: var(--md-on-surface-variant);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+/* Lead picker: two labelled groups of filter chips */
+.lead-picker {
+  display: flex;
+  gap: 14px;
+  flex: none;
+}
+.lead-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.lead-buttons {
+  display: flex;
+  gap: 4px;
+}
+.lead-picker button {
+  min-width: 44px;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: var(--md-shape-s);
+  background: var(--md-surface-container-high);
+  border: 1px solid transparent;
+  color: var(--md-on-surface);
+  font-size: 14px;
+  font-weight: 500;
+}
+.lead-picker button:hover {
+  border-color: var(--md-tertiary);
+  background: color-mix(in srgb, var(--md-tertiary) 10%, var(--md-surface-container-high));
+}
+.lead-picker button.active {
+  background: var(--md-tertiary);
+  border-color: var(--md-tertiary);
+  color: var(--md-on-tertiary);
+  font-weight: 700;
+}
+
+.view-presets {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex: none;
+}
+
+/* M3 segmented button group, reused by view, step and speed controls */
+.btn-group {
+  display: inline-flex;
+  flex: none;
+}
+.btn-group > button {
+  border-radius: 0;
+  margin-left: -1px;
+  height: 32px;
+  padding: 0 12px;
+  border-color: var(--md-outline-variant);
+  font-size: 12px;
+}
+.btn-group > button:first-child {
+  margin-left: 0;
+  border-radius: var(--md-shape-full) 0 0 var(--md-shape-full);
+  padding-left: 14px;
+}
+.btn-group > button:last-child {
+  border-radius: 0 var(--md-shape-full) var(--md-shape-full) 0;
+  padding-right: 14px;
+}
+.btn-group > button:hover,
+.btn-group > button.active {
+  position: relative;
+  z-index: 1;
+}
+.btn-group.full {
+  display: flex;
+}
+.btn-group.full > button {
+  flex: 1;
+}
+
+/* --- the 3D stage -------------------------------------------------------- */
+
 .scene-wrap {
   position: relative;
+  /* A size container, so overlays can respond to the stage's own height. */
+  container-type: size;
   min-height: 0;
   min-width: 0;
   overflow: hidden;
-  background: var(--md-surface-container-lowest);
+  background:
+    radial-gradient(ellipse at 50% 42%, #161b26 0%, var(--md-surface-container-lowest) 70%);
 }
 .placeholder {
   display: grid;
@@ -273,10 +402,10 @@ main {
   position: absolute;
   top: 12px;
   left: 12px;
-  /* Clear of the sidebar toggle, which sits on the same edge. */
-  right: 44px;
+  right: 12px;
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 12px;
   pointer-events: none;
 }
@@ -284,23 +413,38 @@ main {
   pointer-events: auto;
 }
 
-/* M3 card, elevation expressed as surface tone */
+/* Legend: bottom-left, out of the way of the heart and the live labels */
 .legend {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 14px;
   flex-wrap: wrap;
   font-size: 12px;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.3px;
   color: var(--md-on-surface-variant);
-  background: color-mix(in srgb, var(--md-surface-container-high) 90%, transparent);
+  background: color-mix(in srgb, var(--md-surface-container) 82%, transparent);
+  backdrop-filter: blur(6px);
   border: 1px solid var(--md-outline-variant);
   border-radius: var(--md-shape-m);
-  padding: 8px 12px;
-  height: fit-content;
+  padding: 6px 12px;
+  pointer-events: none;
+  max-width: calc(100% - 160px);
+}
+@container (max-height: 440px) {
+  .legend {
+    display: none;
+  }
+}
+.legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 .swatch {
-  width: 14px;
+  width: 16px;
   height: 3px;
   border-radius: 2px;
   display: inline-block;
@@ -315,84 +459,163 @@ main {
   background: var(--projection);
 }
 
-/* M3 filter chips */
-.lead-picker {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  height: fit-content;
+/* Display options popover */
+.scene-options {
+  position: relative;
+  margin-left: auto;
 }
-.lead-picker button {
-  min-width: 42px;
-  height: 32px;
-  border-radius: var(--md-shape-s);
-  background: color-mix(in srgb, var(--md-surface-container-high) 90%, transparent);
-  border: 1px solid var(--md-outline-variant);
-  font-size: 13px;
+.options-toggle {
+  background: color-mix(in srgb, var(--md-surface-container-high) 88%, transparent);
+  backdrop-filter: blur(6px);
+  border-color: var(--md-outline-variant);
+  height: 34px;
 }
-.lead-picker button.active {
-  background: var(--md-tertiary-container);
-  border-color: var(--md-tertiary);
-  color: var(--md-on-tertiary-container);
-}
-
-/* ===== Tier-3 banner (M3 banner on tertiary container) =================== */
-
-.conduction-banner {
+.options-card {
   position: absolute;
-  left: 12px;
-  bottom: 12px;
-  right: 12px;
+  top: 42px;
+  right: 0;
+  width: 300px;
+  max-height: calc(100cqh - 60px);
+  overflow-y: auto;
+  z-index: 30;
   display: grid;
   gap: 6px;
-  max-height: 45%;
-  overflow-y: auto;
-  background: color-mix(in srgb, var(--md-tertiary-container) 80%, var(--md-surface));
+  padding: 14px 16px 16px;
+  background: var(--md-surface-container-high);
+  border: 1px solid var(--md-outline-variant);
+  border-radius: var(--md-shape-l);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+}
+.options-card h4 {
+  margin: 8px 0 2px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--md-on-surface-variant);
+}
+.options-card h4:first-child {
+  margin-top: 0;
+}
+.options-card .hint {
+  margin: 2px 0 0;
+  font-size: 11px;
+  line-height: 15px;
+  color: var(--md-on-surface-variant);
+}
+.switch {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 10px;
+  align-items: center;
+  padding: 6px 8px;
+  margin: 0 -8px;
+  border-radius: var(--md-shape-s);
+  cursor: pointer;
+}
+.switch:hover {
+  background: color-mix(in srgb, var(--md-on-surface) 6%, transparent);
+}
+.switch input {
+  grid-row: span 2;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--md-primary);
+}
+.switch span {
+  font-size: 14px;
+}
+.switch small {
+  font-size: 11px;
+  color: var(--md-on-surface-variant);
+}
+.option-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+  font-size: 13px;
+}
+.option-row .readout {
+  font-family: "Roboto Mono", ui-monospace, monospace;
+  font-size: 12px;
+  min-width: 52px;
+  text-align: right;
+}
+
+/* ===== Tier-3 notice: a compact chip that expands, never dismissible ======= */
+
+.conduction-banner {
+  max-width: min(560px, 70%);
+  background: color-mix(in srgb, var(--md-tertiary-container) 70%, var(--md-surface));
   color: var(--md-on-tertiary-container);
   border: 1px solid var(--md-tertiary);
-  border-left-width: 4px;
   border-radius: var(--md-shape-m);
-  padding: 10px 14px;
   font-size: 12px;
   line-height: 17px;
+  overflow: hidden;
+  backdrop-filter: blur(6px);
+}
+.conduction-banner .banner-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 34px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font-weight: 400;
+  font-size: 12px;
+  text-align: left;
+  white-space: nowrap;
+}
+.conduction-banner .banner-head:hover {
+  background: color-mix(in srgb, var(--md-tertiary) 12%, transparent);
+}
+.conduction-banner .tier-dot {
+  background: var(--md-tertiary);
 }
 .conduction-banner strong {
   color: var(--md-tertiary);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.1px;
 }
-.banner-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.banner-head button {
+.conduction-banner .why {
   margin-left: auto;
-  height: 28px;
-  padding: 0 12px;
-  background: transparent;
-  border-color: var(--md-tertiary);
+  padding-left: 8px;
   color: var(--md-tertiary);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 .banner-body {
   display: grid;
-  gap: 6px;
+  gap: 8px;
+  padding: 4px 14px 12px;
+  max-height: 40vh;
+  overflow-y: auto;
 }
 .conduction-banner .agreement {
-  color: color-mix(in srgb, var(--md-on-tertiary-container) 88%, transparent);
+  color: color-mix(in srgb, var(--md-on-tertiary-container) 85%, transparent);
 }
 .conduction-banner .agreement.warn {
   color: var(--md-error);
+  font-weight: 500;
 }
 .conduction-banner.not-applicable {
   border-color: var(--md-error);
-  background: color-mix(in srgb, var(--md-error-container) 45%, var(--md-surface));
+  background: color-mix(in srgb, var(--md-error-container) 40%, var(--md-surface));
   color: var(--md-on-error-container);
 }
-.conduction-banner.not-applicable strong {
+.conduction-banner.not-applicable strong,
+.conduction-banner.not-applicable .why {
   color: var(--md-error);
+}
+.conduction-banner.not-applicable .tier-dot {
+  background: var(--md-error);
 }
 
 /* ===== divider + trace toolbar =========================================== */
@@ -577,45 +800,56 @@ main {
   pointer-events: none;
 }
 
-/* ===== transport controls ================================================ */
+/* ===== transport controls ================================================
+   One row of time controls between the stage and the traces: both views are
+   driven by it, so it sits where both can see it. */
 
 .controls {
   border-top: 1px solid var(--md-outline-variant);
   background: var(--md-surface-container);
   padding: 8px 12px;
-  display: grid;
-  gap: 8px;
 }
 .controls .row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   flex-wrap: wrap;
-}
-.controls .label {
-  color: var(--md-on-surface-variant);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  min-width: 44px;
-}
-.controls .hint {
-  color: var(--md-on-surface-variant);
-  font-size: 11px;
+  row-gap: 8px;
 }
 .controls .readout {
   color: var(--md-on-surface);
   font-family: "Roboto Mono", ui-monospace, monospace;
   font-size: 12px;
   font-variant-numeric: tabular-nums;
-}
-.controls .primary-row > .readout {
-  min-width: 104px;
-  text-align: right;
+  min-width: 118px;
+  text-align: center;
+  white-space: nowrap;
 }
 .controls .scrub {
   flex: 1;
-  min-width: 140px;
+  min-width: 60px;
+}
+.controls .check {
+  white-space: nowrap;
+}
+.controls .speed > button {
+  padding: 0 9px;
+  min-width: 44px;
+}
+.controls .speed > button:first-child {
+  padding-left: 12px;
+}
+.controls .speed > button:last-child {
+  padding-right: 12px;
+}
+button.play {
+  min-width: 96px;
+  height: 36px;
+  gap: 8px;
+}
+.play-icon {
+  font-size: 11px;
+  letter-spacing: -1px;
 }
 
 /* ===== M3 buttons ======================================================== */
@@ -953,6 +1187,12 @@ code {
   border-radius: var(--md-shape-xs);
   background: color-mix(in srgb, var(--md-tertiary-container) 70%, transparent);
 }
+.scene-label.conduction {
+  color: var(--md-tertiary);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
 .scene-label.lead {
   color: var(--md-on-tertiary);
   background: var(--md-tertiary);
@@ -994,10 +1234,32 @@ code {
 
 @media (max-width: 1400px) {
   main {
-    --sidebar-width: 344px;
+    --sidebar-width: 352px;
   }
-  .library select {
-    min-width: 260px;
+  .case-meta .meta-chip:nth-child(n + 3) {
+    display: none;
+  }
+}
+
+@media (max-width: 1300px) {
+  main {
+    --sidebar-width: 320px;
+  }
+  .lead-picker button {
+    min-width: 36px;
+    padding: 0 7px;
+  }
+  .lead-buttons {
+    gap: 3px;
+  }
+  .btn-group > button {
+    padding: 0 9px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .case-meta {
+    display: none;
   }
 }
 

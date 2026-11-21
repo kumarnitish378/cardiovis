@@ -79,7 +79,7 @@ naive_pinv` to change the transform.
   perpendicular meets the axis. The polarity labels are what turn "aVR is
   inverted" from a rule into something visible: the positive electrode points up
   and to the patient's right, so a vector heading down and left reads negative.
-  Toggle with `labels` under `options`.
+  Toggle with **Labels** in the **Display** menu at the top-right of the 3D view.
 - **12-lead panel** — click any trace to select that lead *and* seek to that
   instant. Canvas 2D with min/max decimation; the playhead is drawn without a
   React render.

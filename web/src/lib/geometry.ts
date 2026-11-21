@@ -49,7 +49,7 @@ export const CAMERA_PRESETS: Record<string, { position: [number, number, number]
     hint: "Looking from the patient's left side.",
   },
   oblique: {
-    position: [5.4, 3.8, 5.4],
+    position: [5.0, 3.5, 5.0],
     label: "Oblique",
     hint: "Three-quarter view - the easiest angle for seeing the loop as a loop.",
   },
@@ -70,6 +70,6 @@ export const VECTOR_COLOUR = "#ffb4ab";     // md-error
 export const PROJECTION_COLOUR = "#7fd8c4"; // md-secondary
 
 /** Colours for the conduction model, by state. Tier 3 - illustrative. */
-export const REGION_RESTING = new THREE.Color("#3b2a2f");   // dim error-container
+export const REGION_RESTING = new THREE.Color("#7a3c46");   // muted myocardium
 export const REGION_DEPOLARISED = new THREE.Color("#f5a45e"); // tertiary, hot
 export const REGION_REPOLARISED = new THREE.Color("#3f5f88"); // primary-container

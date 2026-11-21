@@ -53,19 +53,26 @@ function BannerBody({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className={`conduction-banner ${applicable ? "" : "not-applicable"}`}>
-      <div className="banner-head">
-        <strong>{badge}</strong>
+    <div className={`conduction-banner ${applicable ? "" : "not-applicable"} ${open ? "open" : ""}`}>
+      <button
+        className="banner-head"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        title={badge}
+      >
+        <span className="tier-dot" />
+        <strong>Tier 3 &middot; illustrative colour</strong>
         {typeof r === "number" && (
-          <span className="agreement">
-            model vs measured, QRS: <b>r = {r.toFixed(2)}</b>
+          <span className="agreement" title="Correlation between the model's implied dipole and the measured one, over the QRS">
+            model vs measured <b>r = {r.toFixed(2)}</b>
           </span>
         )}
-        {!applicable && <span className="agreement warn">assumptions broken here</span>}
-        <button onClick={() => setOpen((v) => !v)}>{open ? "less" : "why?"}</button>
-      </div>
+        {!applicable && <span className="agreement warn">assumptions broken</span>}
+        <span className="why">{open ? "less" : "why?"}</span>
+      </button>
       {open && (
         <div className="banner-body">
+          <strong>{badge}</strong>
           <span>
             The colour sweeping across the chambers is textbook physiology timed by this
             recording&rsquo;s own P, QRS and T fiducials. It is not a reconstruction of

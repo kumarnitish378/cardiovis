@@ -34,8 +34,8 @@ function TorsoShell() {
   return (
     <group>
       <mesh scale={[TORSO_RADIUS * 0.98, TORSO_RADIUS * 1.2, TORSO_RADIUS * 0.6]}>
-        <sphereGeometry args={[1, 32, 24]} />
-        <meshBasicMaterial color="#5b6a86" wireframe transparent opacity={0.12} />
+        <sphereGeometry args={[1, 28, 18]} />
+        <meshBasicMaterial color="#5b6a86" wireframe transparent opacity={0.055} depthWrite={false} />
       </mesh>
     </group>
   );
@@ -51,9 +51,9 @@ export function Scene() {
       gl={{ antialias: true }}
       onCreated={({ gl }) => gl.setClearColor(new THREE.Color("#0c0e13"))}
     >
-      <ambientLight intensity={0.55} />
-      <directionalLight position={[4, 6, 8]} intensity={1.1} />
-      <directionalLight position={[-6, -3, -6]} intensity={0.35} color="#a8c7fa" />
+      <hemisphereLight args={["#dfe8ff", "#2a1c22", 0.7]} />
+      <directionalLight position={[4, 6, 8]} intensity={1.25} />
+      <directionalLight position={[-6, -3, -6]} intensity={0.45} color="#a8c7fa" />
 
       <Suspense fallback={null}>
         <HeartScene />

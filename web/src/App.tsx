@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { Controls, LeadPicker, Splitter, TraceModePicker } from "./components/Controls";
+import {
+  Controls,
+  LeadPicker,
+  SceneOptions,
+  Splitter,
+  TraceModePicker,
+  ViewPresets,
+} from "./components/Controls";
 import { LeadTracePanel } from "./components/LeadTracePanel";
 import { Scene } from "./components/scene/Scene";
 import {
@@ -53,28 +60,38 @@ export default function App() {
     <div className={`app ${sidebarOpen ? "" : "sidebar-collapsed"}`}>
       <header>
         <div className="brand">
+          <svg className="brand-mark" viewBox="0 0 32 32" aria-hidden>
+            <path
+              d="M16 28s-11-6.6-11-15A6 6 0 0 1 16 9a6 6 0 0 1 11 4c0 8.4-11 15-11 15z"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            />
+            <path d="M5 17h6l2-4 3 8 2-5h9" fill="none" stroke="var(--md-error)" strokeWidth="2" />
+          </svg>
           <h1>CardioVis</h1>
-          <button
-            className="disclaimer"
-            onClick={() => setTab("limits")}
-            title="What CardioVis can and cannot know - the full argument is in LIMITATIONS.md"
-          >
-            For education and research. Not a medical device. Not for diagnosis or clinical
-            decision-making.
-          </button>
         </div>
         <TeachingLibrary />
         {data && (
-          <div className="case-meta">
-            <span>{data.manifest.title}</span>
-            <span className="dim">
-              {data.manifest.subject.ageBand ?? "age n/a"} &middot;{" "}
-              {data.manifest.subject.sex ?? "sex n/a"} &middot; {data.manifest.signal.durationS}s
-              &middot; {data.manifest.signal.sampleRateHz} Hz &middot;{" "}
-              {data.manifest.sourceFormat}
+          <div className="case-meta" aria-label="Recording details">
+            <span className="meta-chip">
+              {data.manifest.subject.ageBand ?? "age n/a"} &middot; {data.manifest.subject.sex ?? "sex n/a"}
             </span>
+            <span className="meta-chip">{data.manifest.signal.durationS} s</span>
+            <span className="meta-chip">{data.manifest.signal.sampleRateHz} Hz</span>
+            <span className="meta-chip">{data.manifest.sourceFormat}</span>
           </div>
         )}
+        <button
+          className="disclaimer"
+          onClick={() => {
+            setTab("limits");
+            if (!sidebarOpen) toggleSidebar();
+          }}
+          title="For education and research. Not a medical device. Not for diagnosis or clinical decision-making. Click for what CardioVis can and cannot know."
+        >
+          <span aria-hidden>⚠</span> Education &amp; research only &middot; not a medical device
+        </button>
       </header>
 
       {error && (
@@ -94,18 +111,32 @@ export default function App() {
         }
       >
         <section className="viewport">
+          <div className="stage-toolbar">
+            <LeadPicker />
+            <ViewPresets />
+          </div>
           <div className="scene-wrap">
             {data ? <Scene /> : <div className="placeholder">{loading ? "loading…" : "no case"}</div>}
             <div className="scene-overlay-top">
-              <div className="legend">
-                <span className="swatch vector" /> heart vector d(t) <TierBadge tier={2} />
-                <span className="swatch lead" /> lead axis
-                <span className="swatch projection" /> projection onto the lead
-              </div>
-              <LeadPicker />
+              <ConductionBanner />
+              <SceneOptions />
             </div>
-            <ConductionBanner />
+            {data && (
+              <div className="legend" aria-label="Legend">
+                <span>
+                  <span className="swatch vector" /> heart vector d(t)
+                </span>
+                <span>
+                  <span className="swatch lead" /> lead axis
+                </span>
+                <span>
+                  <span className="swatch projection" /> projection on the lead
+                </span>
+                <TierBadge tier={2} />
+              </div>
+            )}
           </div>
+          <Controls />
           {traceMode === "hidden" ? (
             <div className="splitter collapsed">
               <TraceModePicker />
@@ -116,7 +147,6 @@ export default function App() {
               <LeadTracePanel />
             </>
           )}
-          <Controls />
         </section>
 
         <button

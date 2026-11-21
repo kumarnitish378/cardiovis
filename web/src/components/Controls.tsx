@@ -4,10 +4,12 @@ import { useStore } from "../lib/store";
 
 const SPEEDS = [0.05, 0.1, 0.25, 0.5, 1];
 
+const LIMB_LEADS = ["I", "II", "III", "aVR", "aVL", "aVF"];
+
 /**
- * Transport and options. Only the transport row is always visible - everything
- * else folds away, because every pixel this bar takes comes straight out of the
- * 3D view, which is the thing people are here to look at.
+ * Transport bar: everything to do with *time* in one row, sitting between the
+ * 3D view and the traces it drives. Display options live in the scene's own
+ * popover (SceneOptions), not here.
  */
 export function Controls() {
   const s = useStore();
@@ -16,43 +18,31 @@ export function Controls() {
 
   const beats = data.manifest.delineation.beats;
   const timeMs = (s.frame / data.fs) * 1000;
+  const step4 = Math.round(data.fs * 0.004);
 
   return (
     <div className="controls">
       <div className="row primary-row">
-        <button className="primary" onClick={s.togglePlay}>
+        <button className="primary play" onClick={s.togglePlay} title="Play / pause (space)">
+          <span aria-hidden className="play-icon">{s.playing ? "❚❚" : "▶"}</span>
           {s.playing ? "Pause" : "Play"}
         </button>
-        <button onClick={() => s.gotoBeat(s.currentBeat - 1)} title="Previous beat">
-          &#8592;
-        </button>
-        <button onClick={() => s.gotoBeat(s.currentBeat + 1)} title="Next beat">
-          &#8594;
-        </button>
-        <button onClick={() => s.step(-Math.round(data.fs * 0.004))} title="Back 4 ms">
-          &#8722;4 ms
-        </button>
-        <button onClick={() => s.step(Math.round(data.fs * 0.004))} title="Forward 4 ms">
-          +4 ms
-        </button>
-        {SPEEDS.map((v) => (
-          <button
-            key={v}
-            className={s.speed === v ? "active" : ""}
-            onClick={() => s.setSpeed(v)}
-            title={`Play at ${v}x real time`}
-          >
-            {v}&times;
+
+        <div className="btn-group" role="group" aria-label="Step">
+          <button onClick={() => s.gotoBeat(s.currentBeat - 1)} title="Previous beat">
+            ⏮
           </button>
-        ))}
-        <label className="check">
-          <input
-            type="checkbox"
-            checked={s.loopBeat}
-            onChange={(e) => s.setLoopBeat(e.target.checked)}
-          />
-          loop beat
-        </label>
+          <button onClick={() => s.step(-step4)} title="Back 4 ms (←)">
+            &#8722;4 ms
+          </button>
+          <button onClick={() => s.step(step4)} title="Forward 4 ms (→)">
+            +4 ms
+          </button>
+          <button onClick={() => s.gotoBeat(s.currentBeat + 1)} title="Next beat">
+            ⏭
+          </button>
+        </div>
+
         <input
           className="scrub"
           type="range"
@@ -60,58 +50,133 @@ export function Controls() {
           max={data.n - 1}
           value={s.frame}
           onChange={(e) => s.setFrame(Number(e.target.value))}
+          aria-label="Position in recording"
         />
-        <span className="readout">
+        <span className="readout" title="Beat number / total beats, and time from the start of the recording">
           {s.currentBeat + 1}/{beats.length} &middot; {timeMs.toFixed(0)} ms
         </span>
-        <button
-          className={s.controlsExpanded ? "active" : ""}
-          onClick={() => s.setControlsExpanded(!s.controlsExpanded)}
-          title="Camera, signal and VCG options"
-        >
-          {s.controlsExpanded ? "hide options" : "options"}
-        </button>
-      </div>
 
-      {s.controlsExpanded && (
-        <>
-          <div className="row">
-            <span className="label">view</span>
-            {Object.entries(CAMERA_PRESETS).map(([key, p]) => (
-              <button
-                key={key}
-                className={s.cameraPreset === key ? "active" : ""}
-                onClick={() => s.setCameraPreset(key)}
-                title={p.hint}
-              >
-                {p.label}
-              </button>
-            ))}
-            <label className="check">
-              <input
-                type="checkbox"
-                checked={s.showAllLeadAxes}
-                onChange={(e) => s.setShowAllLeadAxes(e.target.checked)}
-              />
-              all 12 lead axes
-            </label>
-            <label className="check" title="Orientation, chamber, lead-polarity and live value labels">
-              <input
-                type="checkbox"
-                checked={s.showLabels}
-                onChange={(e) => s.setShowLabels(e.target.checked)}
-              />
-              labels
-            </label>
-            <label className="check">
-              <input
-                type="checkbox"
-                checked={s.showConduction}
-                onChange={(e) => s.setShowConduction(e.target.checked)}
-              />
-              conduction model (Tier 3)
-            </label>
-            <span className="label">trail</span>
+        <div className="btn-group speed" role="group" aria-label="Playback speed">
+          {SPEEDS.map((v) => (
+            <button
+              key={v}
+              className={s.speed === v ? "active" : ""}
+              onClick={() => s.setSpeed(v)}
+              title={`Play at ${v}x real time`}
+            >
+              {v}&times;
+            </button>
+          ))}
+        </div>
+        <label className="check" title="Repeat the current beat instead of playing through the recording">
+          <input type="checkbox" checked={s.loopBeat} onChange={(e) => s.setLoopBeat(e.target.checked)} />
+          loop beat
+        </label>
+      </div>
+    </div>
+  );
+}
+
+/** Camera presets as a segmented control on the stage toolbar. */
+export function ViewPresets() {
+  const cameraPreset = useStore((s) => s.cameraPreset);
+  const setCameraPreset = useStore((s) => s.setCameraPreset);
+  return (
+    <div className="view-presets" role="group" aria-label="Camera view">
+      <span className="group-label">view</span>
+      <div className="btn-group">
+        {Object.entries(CAMERA_PRESETS).map(([key, p]) => (
+          <button
+            key={key}
+            className={cameraPreset === key ? "active" : ""}
+            onClick={() => setCameraPreset(key)}
+            title={p.hint}
+          >
+            {p.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Display options, as a popover card anchored to the top-right of the 3D view:
+ * close to the thing it changes, and out of the way when closed.
+ */
+export function SceneOptions() {
+  const s = useStore();
+  const data = s.data;
+  const ref = useRef<HTMLDivElement>(null);
+  const open = s.controlsExpanded;
+  const setOpen = s.setControlsExpanded;
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: PointerEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("pointerdown", onDown);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open, setOpen]);
+
+  if (!data) return null;
+
+  return (
+    <div className="scene-options" ref={ref}>
+      <button
+        className={`options-toggle ${open ? "active" : ""}`}
+        onClick={() => setOpen(!open)}
+        title="Labels, overlays, signal and VCG options"
+        aria-expanded={open}
+      >
+        <span aria-hidden>⚙</span> Display
+      </button>
+
+      {open && (
+        <div className="options-card" role="dialog" aria-label="Display options">
+          <h4>In the 3D view</h4>
+          <label className="switch">
+            <input type="checkbox" checked={s.showLabels} onChange={(e) => s.setShowLabels(e.target.checked)} />
+            <span>Labels</span>
+            <small>orientation, chambers, lead polarity, live values</small>
+          </label>
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={s.showAllLeadAxes}
+              onChange={(e) => s.setShowAllLeadAxes(e.target.checked)}
+            />
+            <span>All 12 lead axes</span>
+            <small>not just the selected lead</small>
+          </label>
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={s.showConduction}
+              onChange={(e) => s.setShowConduction(e.target.checked)}
+            />
+            <span>Conduction colour</span>
+            <small>Tier 3 - illustrative model</small>
+          </label>
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={s.showModelDipole}
+              onChange={(e) => s.setShowModelDipole(e.target.checked)}
+            />
+            <span>Modelled dipole</span>
+            <small>Tier 3 - the model&rsquo;s vector instead of the measured one</small>
+          </label>
+          <div className="option-row">
+            <span>Loop trail</span>
             <input
               type="range"
               min={60}
@@ -123,19 +188,20 @@ export function Controls() {
             <span className="readout">{s.trailMs} ms</span>
           </div>
 
-          <div className="row">
-            <span className="label">signal</span>
+          <h4>Signal</h4>
+          <div className="btn-group full">
             <button className={!s.showRaw ? "active" : ""} onClick={() => s.setShowRaw(false)}>
               filtered
             </button>
             <button className={s.showRaw ? "active" : ""} onClick={() => s.setShowRaw(true)}>
               unfiltered
             </button>
-            <span className="label">VCG</span>
-            <button
-              className={s.vcgChoice === "primary" ? "active" : ""}
-              onClick={() => s.setVcgChoice("primary")}
-            >
+          </div>
+          <p className="hint">{data.manifest.signal.filter.description}</p>
+
+          <h4>VCG transform</h4>
+          <div className="btn-group full">
+            <button className={s.vcgChoice === "primary" ? "active" : ""} onClick={() => s.setVcgChoice("primary")}>
               {data.manifest.vcg.primary.method}
             </button>
             {data.manifest.vcg.alternate && (
@@ -146,42 +212,48 @@ export function Controls() {
                 {data.manifest.vcg.alternate.method}
               </button>
             )}
-            <label
-              className="check"
-              title="Draw the dipole implied by the Tier-3 model instead of the measured one"
-            >
-              <input
-                type="checkbox"
-                checked={s.showModelDipole}
-                onChange={(e) => s.setShowModelDipole(e.target.checked)}
-              />
-              modelled dipole (Tier 3)
-            </label>
-            <span className="hint">{data.manifest.signal.filter.description}</span>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
 }
 
+/**
+ * Lead selector, grouped the way leads are taught: the six limb leads view the
+ * heart in the frontal plane, the six chest leads in the horizontal plane.
+ */
 export function LeadPicker() {
   const data = useStore((s) => s.data);
   const selectedLead = useStore((s) => s.selectedLead);
   const setSelectedLead = useStore((s) => s.setSelectedLead);
   if (!data) return null;
 
+  const limb = data.leadNames.filter((l) => LIMB_LEADS.includes(l));
+  const chest = data.leadNames.filter((l) => !LIMB_LEADS.includes(l));
+
+  const group = (label: string, hint: string, leads: string[]) => (
+    <div className="lead-group" title={hint}>
+      <span className="group-label">{label}</span>
+      <div className="lead-buttons">
+        {leads.map((lead) => (
+          <button
+            key={lead}
+            className={lead === selectedLead ? "active" : ""}
+            onClick={() => setSelectedLead(lead)}
+            aria-pressed={lead === selectedLead}
+          >
+            {lead}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <div className="lead-picker">
-      {data.leadNames.map((lead) => (
-        <button
-          key={lead}
-          className={lead === selectedLead ? "active" : ""}
-          onClick={() => setSelectedLead(lead)}
-        >
-          {lead}
-        </button>
-      ))}
+      {group("limb", "Limb leads - they view the heart in the frontal plane", limb)}
+      {group("chest", "Chest (precordial) leads - they view the heart in the horizontal plane", chest)}
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { Html } from "@react-three/drei";
 import * as THREE from "three";
 import { HEART_SCALE, MV_TO_UNITS, TORSO_RADIUS } from "../../lib/geometry";
 import { useStore } from "../../lib/store";
-import { REGION_SHAPES } from "./heartModel";
+import { HEART_CENTRE, REGION_ANCHORS } from "./heartModel";
 import { currentDipole } from "./VectorArrow";
 import { leadVectorScene } from "./LeadProjection";
 
@@ -33,7 +33,7 @@ function Label({
 }: {
   position: [number, number, number];
   children?: React.ReactNode;
-  variant?: "anatomy" | "chamber" | "lead" | "lead-negative" | "vector" | "projection";
+  variant?: "anatomy" | "chamber" | "conduction" | "lead" | "lead-negative" | "vector" | "projection";
   innerRef?: React.Ref<HTMLDivElement>;
   /** drei scales distanceFactor labels by the canvas height as well as the
    *  camera distance, so anatomy labels doubled in size whenever the 3D
@@ -56,17 +56,52 @@ function Label({
   );
 }
 
-/** Which way is up, left and forward - in the patient's terms, not the camera's. */
+/**
+ * Which way is up, left and forward - in the patient's terms, not the camera's.
+ * A label whose axis points almost straight at (or away from) the camera would
+ * land in the middle of the screen on top of the heart, so it is hidden while
+ * the view looks along it (e.g. anterior/posterior in the frontal view).
+ */
+const ORIENTATION: Array<[string, [number, number, number]]> = [
+  ["left", [1.04, 0, 0]],
+  ["right", [-1.04, 0, 0]],
+  ["superior", [0, 1.14, 0]],
+  ["inferior", [0, -1.14, 0]],
+  ["anterior", [0, 0, 0.68]],
+  ["posterior", [0, 0, -0.68]],
+];
+
 function OrientationLabels() {
   const r = TORSO_RADIUS;
+  const refs = useRef<Array<HTMLDivElement | null>>([]);
+  const view = useMemo(() => new THREE.Vector3(), []);
+  const dir = useMemo(() => new THREE.Vector3(), []);
+
+  useFrame(({ camera }) => {
+    camera.getWorldDirection(view);
+    ORIENTATION.forEach(([, v], i) => {
+      const el = refs.current[i];
+      if (!el) return;
+      dir.set(...v).normalize();
+      const hidden = Math.abs(dir.dot(view)) > 0.8;
+      const want = hidden ? "none" : "";
+      if (el.style.display !== want) el.style.display = want;
+    });
+  });
+
   return (
     <group>
-      <Label position={[r * 1.04, 0, 0]}>left</Label>
-      <Label position={[-r * 1.04, 0, 0]}>right</Label>
-      <Label position={[0, r * 1.14, 0]}>superior</Label>
-      <Label position={[0, -r * 1.14, 0]}>inferior</Label>
-      <Label position={[0, 0, r * 0.68]}>anterior</Label>
-      <Label position={[0, 0, -r * 0.68]}>posterior</Label>
+      {ORIENTATION.map(([text, v], i) => (
+        <Label
+          key={text}
+          position={[v[0] * r, v[1] * r, v[2] * r]}
+          innerRef={(el: HTMLDivElement | null) => {
+            refs.current[i] = el;
+          }}
+        >
+          {text}
+        </Label>
+      ))}
     </group>
   );
 }
@@ -78,7 +113,7 @@ const CHAMBER_LABELS: Record<string, string> = {
   lv: "LV",
   septum: "septum",
   av: "AV node",
-  lv_basal: "basal LV",
+  sa: "SA node",
 };
 
 /** TIER 3: these name the model's regions, not measured anatomy. */
@@ -86,18 +121,23 @@ function ChamberLabels() {
   return (
     <group>
       {Object.entries(CHAMBER_LABELS).map(([key, text]) => {
-        const shape = REGION_SHAPES[key];
-        if (!shape) return null;
-        // Push each label outward along its own direction from the centre of the
-        // heart. Sitting them on the chambers piles every label into the middle
-        // of the screen, where they overlap each other and the live readouts.
-        const p = new THREE.Vector3(...shape.position).multiplyScalar(HEART_SCALE);
-        const out = p.clone().setY(p.y * 0.6);
+        const anchor = REGION_ANCHORS[key];
+        if (!anchor) return null;
+        // Push each label outward from the centre of the heart, so labels fan
+        // out around the silhouette instead of piling up in the middle where
+        // the live readouts are.
+        const p = anchor.clone().multiplyScalar(HEART_SCALE);
+        const c = HEART_CENTRE.clone().multiplyScalar(HEART_SCALE);
+        const out = p.clone().sub(c);
         if (out.lengthSq() < 1e-6) out.set(0, 1, 0);
-        out.normalize().multiplyScalar(0.55 + shape.scale[0] * HEART_SCALE * 0.9);
+        // The AV node sits right under the RA; send its label down and right
+        // (subject's right, inferior) so the two never collide.
+        if (key === "av") out.set(-1, -1.1, 0.5);
+        const small = key === "av" || key === "sa";
+        out.normalize().multiplyScalar(small ? 0.7 : 0.45);
         const pos = p.add(out);
         return (
-          <Label key={key} variant="chamber" position={[pos.x, pos.y, pos.z]}>
+          <Label key={key} variant={small ? "conduction" : "chamber"} position={[pos.x, pos.y, pos.z]}>
             {text}
           </Label>
         );

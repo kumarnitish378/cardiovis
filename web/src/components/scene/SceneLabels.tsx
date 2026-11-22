@@ -226,9 +226,6 @@ function LiveLabels() {
   if (!data) return null;
   return (
     <group>
-      <group ref={vectorGroup}>
-        <Label variant="vector" position={[0, 0, 0]} innerRef={vectorText} />
-      </group>
       <group ref={projectionGroup}>
         <Label variant="projection" position={[0, 0, 0]} innerRef={projectionText} />
       </group>
@@ -238,19 +235,19 @@ function LiveLabels() {
 
 export function SceneLabels() {
   const showLabels = useStore((s) => s.showLabels);
-  const showConduction = useStore((s) => s.showConduction);
+  const showAnatomy = useStore((s) => s.showAnatomy);
 
   // Html mounts DOM nodes; unmounting them when labels are off is cheaper than
   // hiding them, and keeps the overlay out of the way of OrbitControls.
   useEffect(() => undefined, [showLabels]);
-  if (!showLabels) return null;
+  if (!showLabels && !showAnatomy) return null;
 
   return (
     <group>
-      <OrientationLabels />
-      {showConduction && <ChamberLabels />}
-      <LeadAxisLabels />
-      <LiveLabels />
+      {showAnatomy && <OrientationLabels />}
+      {showAnatomy && <ChamberLabels />}
+      {showLabels && <LeadAxisLabels />}
+      {showLabels && <LiveLabels />}
     </group>
   );
 }

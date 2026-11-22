@@ -20,8 +20,8 @@ const afterStill = await readout();   // must be identical: paused means paused
 // The 3D canvas must actually change between two instants in the beat.
 const pixels = async () => page.locator('canvas').first().screenshot().then(b => b.length + ':' + b.subarray(0, 4000).reduce((a, x) => a + x, 0));
 const f1 = await pixels();
-await page.click('.controls button:has-text("+4 ms")');
-for (let i = 0; i < 12; i++) await page.click('.controls button:has-text("+4 ms")');
+await page.click('.controls button[aria-label="Forward 4 ms"]');
+for (let i = 0; i < 12; i++) await page.click('.controls button[aria-label="Forward 4 ms"]');
 await page.waitForTimeout(400);
 const f2 = await pixels();
 

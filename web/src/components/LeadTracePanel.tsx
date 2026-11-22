@@ -75,7 +75,7 @@ function drawRuler(
   const spanS = view.span / data.fs;
   const step = [0.01, 0.02, 0.04, 0.1, 0.2, 0.5, 1, 2, 5].find((c) => spanS / c <= 12) ?? 10;
 
-  ctx.font = `${Math.round(10 * dpr)}px Roboto, ui-monospace, monospace`;
+  ctx.font = `${Math.round(10 * dpr)}px "IBM Plex Mono", ui-monospace, monospace`;
   ctx.textBaseline = "middle";
   ctx.textAlign = "left";
   const label = getComputedStyle(canvas).getPropertyValue("--ruler-fg") || "#cac4d0";
@@ -173,7 +173,7 @@ function drawTraces(
     ctx.stroke();
 
     ctx.fillStyle = selected ? colours.labelOn : colours.label;
-    ctx.font = `${Math.round(selected ? 12 : 11) * dpr}px Roboto, ui-monospace, monospace`;
+    ctx.font = `${Math.round(selected ? 12 : 11) * dpr}px "IBM Plex Mono", ui-monospace, monospace`;
     ctx.textAlign = "right";
     ctx.textBaseline = "middle";
     ctx.fillText(lead, (PADDING_LEFT - 10) * dpr, mid);

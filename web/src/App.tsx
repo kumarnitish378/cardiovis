@@ -4,23 +4,50 @@ import {
   LeadPicker,
   SceneOptions,
   Splitter,
+  StageReadout,
   TraceModePicker,
+  TraceZoomControls,
   ViewPresets,
 } from "./components/Controls";
+import { BrandMark, Icon } from "./components/Icon";
+import { ResizeHandle, usePersistentSize } from "./components/ResizeHandle";
 import { LeadTracePanel } from "./components/LeadTracePanel";
 import { Scene } from "./components/scene/Scene";
-import {
-  MetricsPanel,
-  ProjectionReadout,
-  TeachingNote,
-  WarningsPanel,
-} from "./components/SidePanels";
+import { MetricsPanel, ProjectionReadout, TeachingNote, WarningsPanel } from "./components/SidePanels";
 import { LeadPlacementLab, TeachingLibrary } from "./components/TeachingLibrary";
 import { ConductionBanner, TierBadge } from "./components/TierBadge";
 import { useClockLoop } from "./lib/clock";
 import { useStore } from "./lib/store";
+import { COMPACT_QUERY, useMediaQuery } from "./lib/useMediaQuery";
 
-type Tab = "projection" | "measurements" | "limits" | "lab";
+type Tab = "traces" | "explain" | "measure" | "limits" | "lab";
+
+const TAB_LABELS: Record<Tab, string> = {
+  traces: "Traces",
+  explain: "Explain",
+  measure: "Measure",
+  limits: "Limits",
+  lab: "Lab",
+};
+
+/**
+ * Layout
+ *
+ *   wide (>= 1100 px)                      compact (< 1100 px: tablet portrait, phone)
+ *   +-----------------------------+----+   +----------------------+
+ *   | top bar                          |   | top bar              |
+ *   +----+------------------------+----+   +----------------------+
+ *   |lead|  3D stage              |insp|   | 3D stage             |
+ *   |rail|                        |ector|  +----------------------+
+ *   +----+------------------------+    |   | lead strip           |
+ *   | transport                   |    |   | transport            |
+ *   | traces                      |    |   | tabs: Traces Explain |
+ *   +-----------------------------+----+   | dock                 |
+ *                                          +----------------------+
+ */
+const inspectorMax = () => Math.min(640, Math.round(window.innerWidth * 0.45));
+const dockMax = () => Math.round(window.innerHeight * 0.75);
+const defaultDock = () => Math.round(Math.min(480, window.innerHeight * 0.4));
 
 export default function App() {
   const init = useStore((s) => s.init);
@@ -33,13 +60,26 @@ export default function App() {
   const traceHeight = useStore((s) => s.traceHeight);
   const sidebarOpen = useStore((s) => s.sidebarOpen);
   const toggleSidebar = useStore((s) => s.toggleSidebar);
-  const [tab, setTab] = useState<Tab>("projection");
+  const compact = useMediaQuery(COMPACT_QUERY);
+  const [tab, setTab] = useState<Tab>("explain");
+
+  // Resizable panes: the inspector's width (wide) and the dock's height (compact).
+  const [inspectorW, setInspectorW] = usePersistentSize("cardiovis.inspectorW", 320, 260, inspectorMax);
+  const [dockH, setDockH] = usePersistentSize("cardiovis.dockH", defaultDock(), 160, dockMax);
 
   useClockLoop();
 
   useEffect(() => {
     init();
   }, [init]);
+
+  // "Traces" is a tab only in the compact layout; leaving it, fall back.
+  useEffect(() => {
+    if (!compact && tab === "traces") setTab("explain");
+  }, [compact, tab]);
+  useEffect(() => {
+    if (compact) setTab("traces");
+  }, [compact]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -50,48 +90,106 @@ export default function App() {
       }
       if (e.code === "ArrowLeft") step(-2);
       if (e.code === "ArrowRight") step(2);
-      if (e.key === "f" || e.key === "F") toggleSidebar();   // more room for the scene
+      if (e.key === "f" || e.key === "F") toggleSidebar();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [togglePlay, step, toggleSidebar]);
 
+  const openLimits = () => {
+    setTab("limits");
+    if (!compact && !sidebarOpen) toggleSidebar();
+  };
+
+  const tabs: Tab[] = compact
+    ? ["traces", "explain", "measure", "limits", "lab"]
+    : ["explain", "measure", "limits", "lab"];
+
+  const panels = (
+    <>
+      {tab === "explain" && (
+        <>
+          <ProjectionReadout />
+          <TeachingNote />
+        </>
+      )}
+      {tab === "measure" && <MetricsPanel />}
+      {tab === "limits" && (
+        <>
+          <WarningsPanel />
+          <LimitsPanel />
+        </>
+      )}
+      {tab === "lab" && <LeadPlacementLab />}
+    </>
+  );
+
+  const tabBar = (
+    <nav className="tabs" role="tablist">
+      {tabs.map((t) => (
+        <button
+          key={t}
+          role="tab"
+          aria-selected={tab === t}
+          className={tab === t ? "active" : ""}
+          onClick={() => setTab(t)}
+        >
+          {TAB_LABELS[t]}
+        </button>
+      ))}
+    </nav>
+  );
+
+  const m = data?.manifest;
+
   return (
-    <div className={`app ${sidebarOpen ? "" : "sidebar-collapsed"}`}>
-      <header>
+    <div
+      className={`app ${compact ? "is-compact" : "is-wide"} ${sidebarOpen ? "" : "sidebar-collapsed"}`}
+      style={
+        {
+          "--trace-height": traceMode === "hidden" ? "0px" : `${Math.round(traceHeight)}px`,
+          "--inspector-w": `${inspectorW}px`,
+          "--dock-h": `${dockH}px`,
+        } as React.CSSProperties
+      }
+    >
+      <header className="topbar">
         <div className="brand">
-          <svg className="brand-mark" viewBox="0 0 32 32" aria-hidden>
-            <path
-              d="M16 28s-11-6.6-11-15A6 6 0 0 1 16 9a6 6 0 0 1 11 4c0 8.4-11 15-11 15z"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            />
-            <path d="M5 17h6l2-4 3 8 2-5h9" fill="none" stroke="var(--md-error)" strokeWidth="2" />
-          </svg>
-          <h1>CardioVis</h1>
+          <BrandMark />
+          <span className="wordmark">CardioVis</span>
         </div>
+        <span className="topbar-divider" aria-hidden />
         <TeachingLibrary />
-        {data && (
+        {m && (
           <div className="case-meta" aria-label="Recording details">
-            <span className="meta-chip">
-              {data.manifest.subject.ageBand ?? "age n/a"} &middot; {data.manifest.subject.sex ?? "sex n/a"}
+            <span>
+              {m.subject.ageBand ?? "age n/a"} · {m.subject.sex ?? "sex n/a"}
             </span>
-            <span className="meta-chip">{data.manifest.signal.durationS} s</span>
-            <span className="meta-chip">{data.manifest.signal.sampleRateHz} Hz</span>
-            <span className="meta-chip">{data.manifest.sourceFormat}</span>
+            <span>{m.signal.durationS} s</span>
+            {m.teaching?.synthetic && <span className="synthetic">synthetic</span>}
           </div>
         )}
-        <button
-          className="disclaimer"
-          onClick={() => {
-            setTab("limits");
-            if (!sidebarOpen) toggleSidebar();
-          }}
-          title="For education and research. Not a medical device. Not for diagnosis or clinical decision-making. Click for what CardioVis can and cannot know."
-        >
-          <span aria-hidden>⚠</span> Education &amp; research only &middot; not a medical device
-        </button>
+        <div className="topbar-end">
+          <button
+            className="disclaimer"
+            onClick={openLimits}
+            title="For education and research. Not a medical device. Not for diagnosis or clinical decision-making."
+            aria-label="Not a medical device - for education and research only"
+          >
+            <Icon name="info" size={16} />
+            <span className="long">Not a medical device</span>
+          </button>
+          {!compact && (
+            <button
+              className={`icon-btn sidebar-toggle ${sidebarOpen ? "on" : ""}`}
+              onClick={toggleSidebar}
+              aria-label={sidebarOpen ? "Hide panel" : "Show panel"}
+              title={sidebarOpen ? "Hide panel (f)" : "Show panel (f)"}
+            >
+              <Icon name="panel" />
+            </button>
+          )}
+        </div>
       </header>
 
       {error && (
@@ -103,92 +201,83 @@ export default function App() {
         </div>
       )}
 
-      <main
-        style={
-          {
-            "--trace-height": traceMode === "hidden" ? "0px" : `${Math.round(traceHeight)}px`,
-          } as React.CSSProperties
-        }
-      >
-        <section className="viewport">
-          <div className="stage-toolbar">
-            <LeadPicker />
-            <ViewPresets />
-          </div>
-          <div className="scene-wrap">
-            {data ? <Scene /> : <div className="placeholder">{loading ? "loading…" : "no case"}</div>}
-            <div className="scene-overlay-top">
-              <ConductionBanner />
-              <SceneOptions />
-            </div>
-            {data && (
-              <div className="legend" aria-label="Legend">
-                <span>
-                  <span className="swatch vector" /> heart vector d(t)
-                </span>
-                <span>
-                  <span className="swatch lead" /> lead axis
-                </span>
-                <span>
-                  <span className="swatch projection" /> projection on the lead
-                </span>
-                <TierBadge tier={2} />
+      <main className="workspace">
+        <section className="stage-column">
+          <div className="stage">
+            {!compact && <LeadPicker />}
+            <div className="scene-wrap">
+              {data ? <Scene /> : <div className="placeholder">{loading ? "Loading…" : "No case"}</div>}
+              <div className="stage-top">
+                <StageReadout />
+                <div className="stage-tools">
+                  <ViewPresets />
+                  <SceneOptions />
+                </div>
               </div>
-            )}
-          </div>
-          <Controls />
-          {traceMode === "hidden" ? (
-            <div className="splitter collapsed">
-              <TraceModePicker />
+              <div className="stage-bottom">
+                <ConductionBanner onExplain={openLimits} />
+              </div>
             </div>
-          ) : (
-            <>
-              <Splitter />
-              <LeadTracePanel />
-            </>
+          </div>
+
+          {compact && <LeadPicker />}
+          <Controls />
+
+          {!compact &&
+            (traceMode === "hidden" ? (
+              <div className="splitter collapsed">
+                <TraceModePicker />
+              </div>
+            ) : (
+              <>
+                <Splitter />
+                <LeadTracePanel />
+              </>
+            ))}
+
+          {compact && (
+            <div className="dock">
+              <ResizeHandle
+                axis="y"
+                invert
+                value={dockH}
+                onChange={setDockH}
+                onReset={() => setDockH(defaultDock())}
+                label="Resize panel"
+                className="dock-handle"
+              />
+              {tabBar}
+              {tab === "traces" ? (
+                <div className="dock-traces">
+                  <div className="trace-toolbar">
+                    <TraceZoomControls />
+                    <TraceModePicker />
+                  </div>
+                  <LeadTracePanel />
+                </div>
+              ) : (
+                <div className="panels">{panels}</div>
+              )}
+            </div>
           )}
         </section>
 
-        <button
-          className="sidebar-toggle"
-          onClick={toggleSidebar}
-          title={sidebarOpen ? "Collapse the panel (f)" : "Show the panel (f)"}
-        >
-          {sidebarOpen ? "›" : "‹"}
-        </button>
-
-        <aside>
-          <nav className="tabs">
-            <button className={tab === "projection" ? "active" : ""} onClick={() => setTab("projection")}>
-              Projection
-            </button>
-            <button className={tab === "measurements" ? "active" : ""} onClick={() => setTab("measurements")}>
-              Measurements
-            </button>
-            <button className={tab === "limits" ? "active" : ""} onClick={() => setTab("limits")}>
-              Limits
-            </button>
-            <button className={tab === "lab" ? "active" : ""} onClick={() => setTab("lab")}>
-              Placement lab
-            </button>
-          </nav>
-          <div className="panels">
-            {tab === "projection" && (
-              <>
-                <ProjectionReadout />
-                <TeachingNote />
-              </>
-            )}
-            {tab === "measurements" && <MetricsPanel />}
-            {tab === "limits" && (
-              <>
-                <WarningsPanel />
-                <LimitsPanel />
-              </>
-            )}
-            {tab === "lab" && <LeadPlacementLab />}
-          </div>
-        </aside>
+        {!compact && sidebarOpen && (
+          <ResizeHandle
+            axis="x"
+            invert
+            value={inspectorW}
+            onChange={setInspectorW}
+            onReset={() => setInspectorW(320)}
+            label="Resize side panel"
+          />
+        )}
+        {!compact && (
+          <aside className="inspector">
+            {tabBar}
+            <div className="panels">{panels}</div>
+          </aside>
+        )}
       </main>
     </div>
   );
@@ -201,49 +290,38 @@ function LimitsPanel() {
 
   return (
     <section className="panel">
-      <h2>What CardioVis can and cannot know</h2>
-      <p className="lede">
-        A 12-lead ECG contains <b>8 independent signals</b> (I, II, V1-V6; the rest are
-        linear combinations). A single equivalent dipole is <b>3 numbers per instant</b>. A
-        spatial activation wavefront over a myocardial mesh has thousands of degrees of
-        freedom. The inverse problem is massively underdetermined, so the wavefront cannot
-        be recovered from these leads - by anyone, with any software.
-      </p>
+      <h2>What the app can know</h2>
       <ul className="tier-list">
         <li>
-          <TierBadge tier={1} /> the 12 waveforms, the sample rate, the device metadata.
+          <TierBadge tier={1} /> The 12 waveforms and device data.
         </li>
         <li>
-          <TierBadge tier={2} /> d(t), the QRS axis, intervals, the QRS-T angle, loop shape -
-          recovered by a published linear transform of the 8 independent leads.
+          <TierBadge tier={2} /> The heart vector, axis, intervals and loop - computed from the leads.
         </li>
         <li>
-          <TierBadge tier={3} /> the colour sweeping across the chambers. Textbook anatomy,
-          this patient&rsquo;s timing. Not a reconstruction.
+          <TierBadge tier={3} /> The colour on the heart - textbook timing, not this patient.
         </li>
       </ul>
-      {conduction && (
-        <>
-          <h3>Where the model stands on this recording</h3>
-          <p className="lede">{conduction.agreement?.verdict}</p>
+      {conduction?.agreement?.verdict && <p className="footnote">{conduction.agreement.verdict}</p>}
+      <details className="more">
+        <summary>Why the wavefront can&rsquo;t be recovered</summary>
+        <p>
+          A 12-lead ECG has 8 independent signals; one dipole is 3 numbers per instant. A
+          wavefront over a heart has thousands of degrees of freedom, so it cannot be
+          recovered from these leads - by any software. True 3D reconstruction (ECGI) needs
+          a 200+ electrode vest and CT geometry.
+        </p>
+        {conduction && conduction.caveats.length > 0 && (
           <ul className="caveats">
             {conduction.caveats.map((c, i) => (
               <li key={i}>{c}</li>
             ))}
           </ul>
-        </>
-      )}
-      <p className="footnote">
-        The full argument, including what this implementation has and has not been
-        validated against, is in <code>LIMITATIONS.md</code> and <code>METHODS.md</code> in
-        the repository.
-      </p>
-      <p className="footnote">
-        Genuine 3D reconstruction - ECGI - needs a 200-250 electrode body-surface vest plus
-        patient-specific CT heart-torso geometry, and even then its spatial accuracy in
-        human validation has been described as only moderate. CardioVis is not doing ECGI,
-        and does not pretend to.
-      </p>
+        )}
+        <p>
+          Full argument: <code>LIMITATIONS.md</code> and <code>METHODS.md</code>.
+        </p>
+      </details>
     </section>
   );
 }

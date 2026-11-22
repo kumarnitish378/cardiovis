@@ -74,16 +74,22 @@ export function LeadProjection() {
     }
   }, []);
 
-  // Static axis endpoints, recomputed only when the lead or its offset changes.
-  useEffect(() => {
-    if (!data) return;
+  // Axis endpoints, recomputed only when the lead or its offset changes. They
+  // are passed to <Line> as props: writing them imperatively with
+  // setPositions was undone by drei on any unrelated re-render, which left the
+  // axis lying horizontal (the placeholder points) while its end markers were
+  // correct.
+  const axisEnds = useMemo(() => {
     const v = leadVectorScene(selectedLead);
     const a = v.clone().multiplyScalar(-TORSO_RADIUS);
     const b = v.clone().multiplyScalar(TORSO_RADIUS);
-    axisRef.current?.geometry.setPositions([a.x, a.y, a.z, b.x, b.y, b.z]);
-    plusEnd.current?.position.copy(b);
-    minusEnd.current?.position.copy(a);
+    return { a, b, points: [a.toArray(), b.toArray()] as [number, number, number][] };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedLead, data, offsets]);
+  useEffect(() => {
+    plusEnd.current?.position.copy(axisEnds.b);
+    minusEnd.current?.position.copy(axisEnds.a);
+  }, [axisEnds]);
 
   useFrame(() => {
     if (!data) return;
@@ -108,10 +114,7 @@ export function LeadProjection() {
     <group>
       <Line
         ref={axisRef}
-        points={[
-          [-TORSO_RADIUS, 0, 0],
-          [TORSO_RADIUS, 0, 0],
-        ]}
+        points={axisEnds.points}
         color={LEAD_COLOUR}
         lineWidth={1.6}
         transparent

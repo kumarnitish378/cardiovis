@@ -1,15 +1,23 @@
 import { useCallback, useEffect, useRef } from "react";
 import { CAMERA_PRESETS } from "../lib/geometry";
 import { useStore } from "../lib/store";
+import { Icon } from "./Icon";
 
 const SPEEDS = [0.05, 0.1, 0.25, 0.5, 1];
 
 const LIMB_LEADS = ["I", "II", "III", "aVR", "aVL", "aVF"];
 
+/** Short labels for the camera presets - the long names live in the tooltip. */
+const VIEW_SHORT: Record<string, string> = {
+  frontal: "Front",
+  horizontal: "Top",
+  sagittal: "Side",
+  oblique: "3D",
+};
+
 /**
- * Transport bar: everything to do with *time* in one row, sitting between the
- * 3D view and the traces it drives. Display options live in the scene's own
- * popover (SceneOptions), not here.
+ * Transport: everything to do with time, in one row between the 3D view and
+ * the traces it drives.
  */
 export function Controls() {
   const s = useStore();
@@ -22,27 +30,31 @@ export function Controls() {
 
   return (
     <div className="controls">
-      <div className="row primary-row">
-        <button className="primary play" onClick={s.togglePlay} title="Play / pause (space)">
-          <span aria-hidden className="play-icon">{s.playing ? "❚❚" : "▶"}</span>
-          {s.playing ? "Pause" : "Play"}
+      <button
+        className="primary play"
+        onClick={s.togglePlay}
+        aria-label={s.playing ? "Pause" : "Play"}
+        title="Play / pause (space)"
+      >
+        <Icon name={s.playing ? "pause" : "play"} />
+      </button>
+
+      <div className="step-group" role="group" aria-label="Step through the recording">
+        <button className="icon-btn" onClick={() => s.gotoBeat(s.currentBeat - 1)} title="Previous beat" aria-label="Previous beat">
+          <Icon name="prevBeat" size={18} />
         </button>
+        <button className="icon-btn" onClick={() => s.step(-step4)} title="Back 4 ms (←)" aria-label="Back 4 ms">
+          <Icon name="stepBack" size={18} />
+        </button>
+        <button className="icon-btn" onClick={() => s.step(step4)} title="Forward 4 ms (→)" aria-label="Forward 4 ms">
+          <Icon name="stepFwd" size={18} />
+        </button>
+        <button className="icon-btn" onClick={() => s.gotoBeat(s.currentBeat + 1)} title="Next beat" aria-label="Next beat">
+          <Icon name="nextBeat" size={18} />
+        </button>
+      </div>
 
-        <div className="btn-group" role="group" aria-label="Step">
-          <button onClick={() => s.gotoBeat(s.currentBeat - 1)} title="Previous beat">
-            ⏮
-          </button>
-          <button onClick={() => s.step(-step4)} title="Back 4 ms (←)">
-            &#8722;4 ms
-          </button>
-          <button onClick={() => s.step(step4)} title="Forward 4 ms (→)">
-            +4 ms
-          </button>
-          <button onClick={() => s.gotoBeat(s.currentBeat + 1)} title="Next beat">
-            ⏭
-          </button>
-        </div>
-
+      <div className="scrub-wrap">
         <input
           className="scrub"
           type="range"
@@ -51,58 +63,86 @@ export function Controls() {
           value={s.frame}
           onChange={(e) => s.setFrame(Number(e.target.value))}
           aria-label="Position in recording"
+          style={{ "--fill": `${(s.frame / Math.max(1, data.n - 1)) * 100}%` } as React.CSSProperties}
         />
-        <span className="readout" title="Beat number / total beats, and time from the start of the recording">
-          {s.currentBeat + 1}/{beats.length} &middot; {timeMs.toFixed(0)} ms
-        </span>
-
-        <div className="btn-group speed" role="group" aria-label="Playback speed">
-          {SPEEDS.map((v) => (
-            <button
-              key={v}
-              className={s.speed === v ? "active" : ""}
-              onClick={() => s.setSpeed(v)}
-              title={`Play at ${v}x real time`}
-            >
-              {v}&times;
-            </button>
-          ))}
-        </div>
-        <label className="check" title="Repeat the current beat instead of playing through the recording">
-          <input type="checkbox" checked={s.loopBeat} onChange={(e) => s.setLoopBeat(e.target.checked)} />
-          loop beat
-        </label>
       </div>
+
+      <span className="readout" title="Beat / total beats · time from the start of the recording">
+        <b>{s.currentBeat + 1}</b>/{beats.length} <span className="sep">·</span> {timeMs.toFixed(0)} ms
+      </span>
+
+      <label className="speed" title="Playback speed">
+        <select value={s.speed} onChange={(e) => s.setSpeed(Number(e.target.value))} aria-label="Playback speed">
+          {SPEEDS.map((v) => (
+            <option key={v} value={v}>
+              {v}&times;
+            </option>
+          ))}
+        </select>
+        <Icon name="chevronDown" size={14} />
+      </label>
+
+      <button
+        className={`icon-btn toggle ${s.loopBeat ? "on" : ""}`}
+        onClick={() => s.setLoopBeat(!s.loopBeat)}
+        aria-pressed={s.loopBeat}
+        aria-label="Loop the current beat"
+        title={s.loopBeat ? "Looping the current beat" : "Playing through the recording"}
+      >
+        <Icon name="repeat" size={18} />
+      </button>
     </div>
   );
 }
 
-/** Camera presets as a segmented control on the stage toolbar. */
+/** Camera presets: a segmented control floating in the stage. */
 export function ViewPresets() {
   const cameraPreset = useStore((s) => s.cameraPreset);
   const setCameraPreset = useStore((s) => s.setCameraPreset);
   return (
-    <div className="view-presets" role="group" aria-label="Camera view">
-      <span className="group-label">view</span>
-      <div className="btn-group">
-        {Object.entries(CAMERA_PRESETS).map(([key, p]) => (
-          <button
-            key={key}
-            className={cameraPreset === key ? "active" : ""}
-            onClick={() => setCameraPreset(key)}
-            title={p.hint}
-          >
-            {p.label}
-          </button>
-        ))}
-      </div>
+    <div className="segmented view-presets" role="radiogroup" aria-label="Camera view">
+      {Object.entries(CAMERA_PRESETS).map(([key, p]) => (
+        <button
+          key={key}
+          role="radio"
+          aria-checked={cameraPreset === key}
+          className={cameraPreset === key ? "active" : ""}
+          onClick={() => setCameraPreset(key)}
+          title={`${p.label} - ${p.hint}`}
+        >
+          {VIEW_SHORT[key] ?? p.label}
+        </button>
+      ))}
     </div>
   );
 }
 
+function Switch({
+  checked,
+  onChange,
+  label,
+  hint,
+}: {
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  label: string;
+  hint?: string;
+}) {
+  return (
+    <label className="switch-row">
+      <span className="switch-text">
+        <span>{label}</span>
+        {hint && <small>{hint}</small>}
+      </span>
+      <input type="checkbox" role="switch" checked={checked} onChange={(e) => onChange(e.target.checked)} />
+      <span className="switch" aria-hidden />
+    </label>
+  );
+}
+
 /**
- * Display options, as a popover card anchored to the top-right of the 3D view:
- * close to the thing it changes, and out of the way when closed.
+ * Display options: a popover from the stage's top-right corner on wide
+ * screens, a bottom sheet on phones.
  */
 export function SceneOptions() {
   const s = useStore();
@@ -132,86 +172,84 @@ export function SceneOptions() {
   return (
     <div className="scene-options" ref={ref}>
       <button
-        className={`options-toggle ${open ? "active" : ""}`}
+        className={`icon-btn floating ${open ? "on" : ""}`}
         onClick={() => setOpen(!open)}
-        title="Labels, overlays, signal and VCG options"
+        title="Display options"
+        aria-label="Display options"
         aria-expanded={open}
       >
-        <span aria-hidden>⚙</span> Display
+        <Icon name="sliders" />
       </button>
 
       {open && (
-        <div className="options-card" role="dialog" aria-label="Display options">
-          <h4>In the 3D view</h4>
-          <label className="switch">
-            <input type="checkbox" checked={s.showLabels} onChange={(e) => s.setShowLabels(e.target.checked)} />
-            <span>Labels</span>
-            <small>orientation, chambers, lead polarity, live values</small>
-          </label>
-          <label className="switch">
-            <input
-              type="checkbox"
-              checked={s.showAllLeadAxes}
-              onChange={(e) => s.setShowAllLeadAxes(e.target.checked)}
-            />
-            <span>All 12 lead axes</span>
-            <small>not just the selected lead</small>
-          </label>
-          <label className="switch">
-            <input
-              type="checkbox"
-              checked={s.showConduction}
-              onChange={(e) => s.setShowConduction(e.target.checked)}
-            />
-            <span>Conduction colour</span>
-            <small>Tier 3 - illustrative model</small>
-          </label>
-          <label className="switch">
-            <input
-              type="checkbox"
-              checked={s.showModelDipole}
-              onChange={(e) => s.setShowModelDipole(e.target.checked)}
-            />
-            <span>Modelled dipole</span>
-            <small>Tier 3 - the model&rsquo;s vector instead of the measured one</small>
-          </label>
-          <div className="option-row">
-            <span>Loop trail</span>
-            <input
-              type="range"
-              min={60}
-              max={900}
-              step={20}
-              value={s.trailMs}
-              onChange={(e) => s.setTrailMs(Number(e.target.value))}
-            />
-            <span className="readout">{s.trailMs} ms</span>
-          </div>
-
-          <h4>Signal</h4>
-          <div className="btn-group full">
-            <button className={!s.showRaw ? "active" : ""} onClick={() => s.setShowRaw(false)}>
-              filtered
-            </button>
-            <button className={s.showRaw ? "active" : ""} onClick={() => s.setShowRaw(true)}>
-              unfiltered
+        <div className="popover options-card" role="dialog" aria-label="Display options">
+          <div className="popover-head">
+            <span>Display</span>
+            <button className="icon-btn" onClick={() => setOpen(false)} aria-label="Close">
+              <Icon name="close" size={18} />
             </button>
           </div>
-          <p className="hint">{data.manifest.signal.filter.description}</p>
 
-          <h4>VCG transform</h4>
-          <div className="btn-group full">
-            <button className={s.vcgChoice === "primary" ? "active" : ""} onClick={() => s.setVcgChoice("primary")}>
-              {data.manifest.vcg.primary.method}
-            </button>
-            {data.manifest.vcg.alternate && (
-              <button
-                className={s.vcgChoice === "alternate" ? "active" : ""}
-                onClick={() => s.setVcgChoice("alternate")}
-              >
-                {data.manifest.vcg.alternate.method}
+          <div className="popover-section">
+            <Switch checked={s.showLabels} onChange={s.setShowLabels} label="Lead labels" />
+            <Switch checked={s.showAnatomy} onChange={s.setShowAnatomy} label="Anatomy labels" />
+            <Switch checked={s.showAllLeadAxes} onChange={s.setShowAllLeadAxes} label="All lead axes" />
+            <Switch checked={s.showConduction} onChange={s.setShowConduction} label="Conduction colour" hint="Illustrative" />
+            <Switch checked={s.showModelDipole} onChange={s.setShowModelDipole} label="Modelled dipole" hint="Illustrative" />
+            <div className="slider-row">
+              <span>Trail</span>
+              <input
+                type="range"
+                min={60}
+                max={900}
+                step={20}
+                value={s.trailMs}
+                onChange={(e) => s.setTrailMs(Number(e.target.value))}
+                style={{ "--fill": `${((s.trailMs - 60) / 840) * 100}%` } as React.CSSProperties}
+              />
+              <span className="mono">{s.trailMs} ms</span>
+            </div>
+          </div>
+
+          <div className="popover-section">
+            <span className="eyebrow">Key</span>
+            <div className="key">
+              <span>
+                <i className="swatch vector" /> Heart vector
+              </span>
+              <span>
+                <i className="swatch lead" /> Lead axis
+              </span>
+              <span>
+                <i className="swatch projection" /> Projection
+              </span>
+            </div>
+          </div>
+
+          <div className="popover-section">
+            <span className="eyebrow">Signal</span>
+            <div className="segmented full" title={data.manifest.signal.filter.description}>
+              <button className={!s.showRaw ? "active" : ""} onClick={() => s.setShowRaw(false)}>
+                Filtered
               </button>
-            )}
+              <button className={s.showRaw ? "active" : ""} onClick={() => s.setShowRaw(true)}>
+                Unfiltered
+              </button>
+            </div>
+          </div>
+
+          <div className="popover-section">
+            <span className="eyebrow">VCG</span>
+            <div className="segmented full">
+              <button className={s.vcgChoice === "primary" ? "active" : ""} onClick={() => s.setVcgChoice("primary")}>
+                {data.manifest.vcg.primary.method}
+              </button>
+              {data.manifest.vcg.alternate && (
+                <button className={s.vcgChoice === "alternate" ? "active" : ""} onClick={() => s.setVcgChoice("alternate")}>
+                  {data.manifest.vcg.alternate.method}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -220,8 +258,9 @@ export function SceneOptions() {
 }
 
 /**
- * Lead selector, grouped the way leads are taught: the six limb leads view the
- * heart in the frontal plane, the six chest leads in the horizontal plane.
+ * Lead selector, grouped the way leads are taught: limb leads (frontal plane)
+ * and chest leads (horizontal plane). A vertical channel rail on wide screens,
+ * a horizontal strip on narrow ones - the CSS decides.
  */
 export function LeadPicker() {
   const data = useStore((s) => s.data);
@@ -233,27 +272,59 @@ export function LeadPicker() {
   const chest = data.leadNames.filter((l) => !LIMB_LEADS.includes(l));
 
   const group = (label: string, hint: string, leads: string[]) => (
-    <div className="lead-group" title={hint}>
-      <span className="group-label">{label}</span>
-      <div className="lead-buttons">
-        {leads.map((lead) => (
-          <button
-            key={lead}
-            className={lead === selectedLead ? "active" : ""}
-            onClick={() => setSelectedLead(lead)}
-            aria-pressed={lead === selectedLead}
-          >
-            {lead}
-          </button>
-        ))}
-      </div>
+    <div className="lead-group" role="group" aria-label={hint}>
+      <span className="eyebrow" title={hint}>
+        {label}
+      </span>
+      {leads.map((lead) => (
+        <button
+          key={lead}
+          className={lead === selectedLead ? "active" : ""}
+          onClick={() => setSelectedLead(lead)}
+          aria-pressed={lead === selectedLead}
+        >
+          {lead}
+        </button>
+      ))}
     </div>
   );
 
   return (
-    <div className="lead-picker">
-      {group("limb", "Limb leads - they view the heart in the frontal plane", limb)}
-      {group("chest", "Chest (precordial) leads - they view the heart in the horizontal plane", chest)}
+    <nav className="lead-picker" aria-label="Lead">
+      {group("Limb", "Limb leads - frontal plane", limb)}
+      {group("Chest", "Chest leads - horizontal plane", chest)}
+    </nav>
+  );
+}
+
+/**
+ * The instrument readout in the stage's corner: which lead you are looking
+ * through, and the value its shadow has right now.
+ */
+export function StageReadout() {
+  const data = useStore((s) => s.data);
+  const lead = useStore((s) => s.selectedLead);
+  const frame = useStore((s) => s.frame);
+  const vcgChoice = useStore((s) => s.vcgChoice);
+  if (!data) return null;
+
+  const entry = data.manifest.leadVectors[lead];
+  if (!entry) return null;
+  const src = vcgChoice === "alternate" && data.vcgAlt ? data.vcgAlt : data.vcg;
+  const i = Math.max(0, Math.min(data.n - 1, frame));
+  const u = entry.unitVector;
+  const p = src[i] * u[0] + src[data.n + i] * u[1] + src[2 * data.n + i] * u[2];
+
+  return (
+    <div className="stage-readout" aria-live="off">
+      <div className="readout-lead">{lead}</div>
+      <div className="readout-meta">
+        <span className={`readout-value ${p >= 0 ? "pos" : "neg"}`}>
+          {p >= 0 ? "+" : "−"}
+          {Math.abs(p).toFixed(2)}
+          <small> mV</small>
+        </span>
+      </div>
     </div>
   );
 }
@@ -284,7 +355,7 @@ export function TraceZoomControls() {
   return (
     <div className="trace-zoom">
       <span className="axis-group" title="Time axis">
-        <span className="label">time</span>
+        <span className="label">Time</span>
         <button onClick={() => s.zoomBy(1 / 1.6)} title="Zoom out in time (wheel down)">
           &#8722;
         </button>
@@ -299,7 +370,7 @@ export function TraceZoomControls() {
       </span>
 
       <span className="axis-group" title="Amplitude axis (shift+wheel)">
-        <span className="label">mV</span>
+        <span className="label">Gain</span>
         <button onClick={() => s.zoomGainBy(1 / 1.5)} title="Smaller deflections (shift+wheel down)">
           &#8722;
         </button>
@@ -311,7 +382,7 @@ export function TraceZoomControls() {
 
       {traceMode !== "selected" && (
         <span className="axis-group" title="Row height (ctrl+wheel). The panel scrolls when rows no longer fit.">
-          <span className="label">rows</span>
+          <span className="label">Rows</span>
           <button onClick={() => s.zoomRowsBy(1 / 1.3)} title="Shorter rows">
             &#8722;
           </button>
@@ -327,7 +398,7 @@ export function TraceZoomControls() {
         onClick={() => s.setBoxZoom(!boxZoom)}
         title="Drag a rectangle to zoom to it (or hold alt and drag)"
       >
-        box
+        Box
       </button>
       <button
         onClick={() => {
@@ -336,10 +407,10 @@ export function TraceZoomControls() {
         }}
         title="Fit the current beat, centred on its QRS"
       >
-        beat
+        Beat
       </button>
       <button onClick={s.resetView} className={zoomed || gain !== 1 ? "" : "active"} title="Whole recording at 1x (double-click the traces)">
-        reset
+        Reset
       </button>
       {zoomed && (
         <label className="check" title="Scroll the window to keep the playhead visible">
@@ -348,7 +419,7 @@ export function TraceZoomControls() {
             checked={followPlayhead}
             onChange={(e) => s.setFollowPlayhead(e.target.checked)}
           />
-          follow
+          Follow
         </label>
       )}
     </div>
@@ -366,21 +437,21 @@ export function TraceModePicker() {
         onClick={() => setTraceMode("all")}
         title="All 12 traces"
       >
-        12 leads
+        All
       </button>
       <button
         className={traceMode === "selected" ? "active" : ""}
         onClick={() => setTraceMode("selected")}
         title="Only the lead selected for the projection view"
       >
-        selected only
+        One
       </button>
       <button
         className={traceMode === "hidden" ? "active" : ""}
         onClick={() => setTraceMode("hidden")}
         title="Hide the traces and give the whole window to the 3D view"
       >
-        hide
+        Hide
       </button>
     </div>
   );

@@ -15,7 +15,7 @@ const report = { errors };
 report.default = await sceneBox();
 await page.screenshot({ path: 'D:/ecg_viz/scratch/layout_default.png' });
 
-await page.click('.trace-mode button:has-text("selected only")');
+await page.click('.trace-mode button:has-text("One")');
 await page.waitForTimeout(500);
 report.selectedOnly = await sceneBox();
 await page.screenshot({ path: 'D:/ecg_viz/scratch/layout_selected.png' });
@@ -28,7 +28,7 @@ await page.screenshot({ path: 'D:/ecg_viz/scratch/layout_max.png' });
 
 // Restore and drag the splitter down 120px: the scene must grow by ~120.
 await page.click('.sidebar-toggle');
-await page.click('.trace-mode button:has-text("12 leads")');
+await page.click('.trace-mode button:has-text("All")');
 await page.waitForTimeout(400);
 const before = await sceneBox();
 const sp = await page.locator('.splitter').boundingBox();

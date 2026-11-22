@@ -55,19 +55,19 @@ export const CAMERA_PRESETS: Record<string, { position: [number, number, number]
   },
 };
 
-/* The 3D scene shares the Material 3 scheme defined in styles.css: primary
-   (blue) = Tier 1, secondary (teal) = Tier 2, tertiary (amber) = Tier 3, error
-   (red) = the heart vector. Kept as literals here because WebGL materials are
+/* The 3D scene shares the data colours defined in styles.css: blue = Tier 1,
+   green = Tier 2 and the projection, amber = Tier 3 and the lead axis, coral =
+   the heart vector. Kept as literals here because WebGL materials are
    built before the CSS custom properties can be read. */
 export const TIER_COLOURS: Record<number, string> = {
-  1: "#a8c7fa",
-  2: "#7fd8c4",
-  3: "#f5c77e",
+  1: "#7ea9ff",
+  2: "#3ccb94",
+  3: "#f0b03f",
 };
 
-export const LEAD_COLOUR = "#f5c77e";       // md-tertiary
-export const VECTOR_COLOUR = "#ffb4ab";     // md-error
-export const PROJECTION_COLOUR = "#7fd8c4"; // md-secondary
+export const LEAD_COLOUR = "#f0b03f";       // --c-lead
+export const VECTOR_COLOUR = "#ff6b57";     // --c-vector
+export const PROJECTION_COLOUR = "#3ccb94"; // --c-proj
 
 /** Colours for the conduction model, by state. Tier 3 - illustrative. */
 export const REGION_RESTING = new THREE.Color("#7a3c46");   // muted myocardium

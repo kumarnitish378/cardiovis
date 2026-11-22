@@ -1,90 +1,77 @@
 /* ==========================================================================
-   CardioVis - Material Design 3 theme
+   CardioVis design system
    --------------------------------------------------------------------------
-   Colour is expressed in M3 roles (primary / secondary / tertiary / error,
-   each with on-, container- and on-container- variants, plus the tonal
-   surface-container steps), not in ad-hoc hex values, so the whole UI can be
-   re-themed by editing this block alone.
+   Character: a quiet scientific instrument. Graphite surfaces, hairline
+   rules, one typeface family (IBM Plex), and colour reserved for data.
+   Chrome never competes with the signal: the only saturated colours on screen
+   are the heart vector, the lead axis, the projection and the tier markers.
 
-   This is a custom M3 scheme rather than the baseline purple, because here the
-   roles carry domain meaning and have to stay distinguishable from each other
-   on a projector:
+   Tokens
+     surface   --bg  --stage  --s1 --s2 --s3        (each step ~+4% L)
+     line      --line --line-2                      (hairlines, never shadows)
+     text      --text --text-2 --text-3             (primary / secondary / muted)
+     data      --c-vector --c-lead --c-proj         (the three things in 3D)
+     tiers     --t1 measured  --t2 derived  --t3 illustrative
+     radius    --r-sm 6  --r-md 8  --r-lg 12
+     space     4-pt scale, components use 8 / 12 / 16 / 20 / 24
+     motion    --ease 140ms cubic-bezier(.2,.7,.2,1)
 
-       primary    (blue)   chrome, actions, Tier 1 "measured"
-       secondary  (teal)   Tier 2 "derived", the VCG loop, positive projection
-       tertiary   (amber)  Tier 3 "illustrative", the lead axis
-       error      (red)    warnings, and the heart vector itself
-
-   Dark scheme only for now: the app is used in lecture theatres, where a light
-   UI beside a dark 3D viewport is unreadable.
+   Selection rule: the *one* thing you are looking through (the lead) is
+   inverted - light fill, dark text. Every other selected state is a quiet
+   raised surface. That keeps a single focal point on screen.
    ========================================================================== */
 
 :root {
-  /* --- M3 colour roles -------------------------------------------------- */
-  --md-primary: #a8c7fa;
-  --md-on-primary: #0a305f;
-  --md-primary-container: #284777;
-  --md-on-primary-container: #d7e3ff;
+  --bg: #0c0d0f;
+  --stage: #0a0b0d;
+  --s1: #121417;
+  --s2: #181b1f;
+  --s3: #21252b;
+  --line: #22262c;
+  --line-2: #2f343b;
 
-  --md-secondary: #7fd8c4;
-  --md-on-secondary: #00382e;
-  --md-secondary-container: #005143;
-  --md-on-secondary-container: #9cf6e0;
+  --text: #eceae6;
+  --text-2: #a3a7ad;
+  --text-3: #6f747b;
 
-  --md-tertiary: #f5c77e;
-  --md-on-tertiary: #402d00;
-  --md-tertiary-container: #5c4200;
-  --md-on-tertiary-container: #ffdea6;
+  --c-vector: #ff6b57;
+  --c-lead: #f0b03f;
+  --c-proj: #3ccb94;
 
-  --md-error: #ffb4ab;
-  --md-on-error: #690005;
-  --md-error-container: #93000a;
-  --md-on-error-container: #ffdad6;
+  --t1: #7ea9ff;
+  --t2: #3ccb94;
+  --t3: #f0b03f;
 
-  --md-surface: #111318;
-  --md-on-surface: #e2e2e9;
-  --md-surface-container-lowest: #0c0e13;
-  --md-surface-container-low: #191c20;
-  --md-surface-container: #1d2024;
-  --md-surface-container-high: #282a2f;
-  --md-surface-container-highest: #33353a;
-  --md-surface-variant: #43474e;
-  --md-on-surface-variant: #c3c6cf;
+  --focus: #7ea9ff;
 
-  --md-outline: #8d9199;
-  --md-outline-variant: #43474e;
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 12px;
 
-  /* --- M3 shape scale --------------------------------------------------- */
-  --md-shape-xs: 4px;
-  --md-shape-s: 8px;
-  --md-shape-m: 12px;
-  --md-shape-l: 16px;
-  --md-shape-xl: 28px;
-  --md-shape-full: 999px;
+  --ease: 140ms cubic-bezier(0.2, 0.7, 0.2, 1);
 
-  /* --- domain colours, mapped onto the roles --------------------------- */
-  --tier1: var(--md-primary);
-  --tier2: var(--md-secondary);
-  --tier3: var(--md-tertiary);
-  --vector: var(--md-error);
-  --lead: var(--md-tertiary);
-  --projection: var(--md-secondary);
+  --font: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
-  /* --- canvas tokens, read by the trace renderer ----------------------- */
-  --trace-surface: #111318;
-  --trace-grid: rgba(141, 145, 153, 0.18);
-  --trace-beat: rgba(195, 198, 207, 0.26);
-  --trace-line: #7fd8c4;
-  --trace-line-selected: #f5c77e;
-  --trace-label: #8d9199;
-  --trace-label-selected: #f5c77e;
-  --ruler-bg: #191c20;
-  --ruler-fg: #c3c6cf;
+  /* canvas tokens, read by the trace renderer */
+  --trace-surface: #0b0c0e;
+  --trace-grid: rgba(255, 255, 255, 0.045);
+  --trace-beat: rgba(255, 255, 255, 0.14);
+  --trace-line: #c4c8ce;
+  --trace-line-selected: #f0b03f;
+  --trace-label: #6f747b;
+  --trace-label-selected: #f0b03f;
+  --ruler-bg: #101215;
+  --ruler-fg: #7d828a;
 
   color-scheme: dark;
 }
 
-* {
+/* ===== base ============================================================== */
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -96,106 +83,340 @@ body,
 }
 
 body {
-  background: var(--md-surface);
-  color: var(--md-on-surface);
-  /* M3 type scale: body-medium as the base */
-  font-family: Roboto, "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
   font-size: 14px;
   line-height: 20px;
-  letter-spacing: 0.25px;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
 }
 
-.app {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+button,
+select,
+input {
+  font: inherit;
+  color: inherit;
 }
 
-/* ===== top app bar =======================================================
-   One compact row: identity, what you are looking at, and the advisory.
-   Everything else is taken out of the bar so the stage gets the height. */
-
-header {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  height: 56px;
-  padding: 0 16px;
-  background: var(--md-surface-container);
-  border-bottom: 1px solid var(--md-outline-variant);
-  flex: none;
-  overflow: hidden;
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex: none;
+.mono {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
 }
-.brand-mark {
-  width: 28px;
-  height: 28px;
-  color: var(--md-primary);
-}
-.brand h1 {
-  /* title-large */
-  font-size: 20px;
-  line-height: 28px;
-  letter-spacing: 0;
+
+.eyebrow {
+  font-size: 10.5px;
+  line-height: 14px;
   font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.dim {
+  color: var(--text-3);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: var(--s2);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0 5px;
+}
+
+.icon {
+  display: block;
+  flex: none;
+}
+
+/* ===== buttons =========================================================== */
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  background: transparent;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-md);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color var(--ease),
+    border-color var(--ease),
+    color var(--ease);
+}
+button:hover {
+  background: var(--s2);
+  border-color: var(--line-2);
+}
+button.active {
+  background: var(--s3);
+  border-color: var(--line-2);
+}
+
+/* the one strong button: play */
+button.primary {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+}
+button.primary:hover {
+  background: #ffffff;
+  border-color: #ffffff;
+}
+
+.icon-btn {
+  width: 32px;
+  padding: 0;
+  border-color: transparent;
+  color: var(--text-2);
+}
+.icon-btn:hover {
+  color: var(--text);
+  background: var(--s2);
+  border-color: transparent;
+}
+.icon-btn.on {
+  color: var(--text);
+  background: var(--s3);
+}
+.icon-btn.floating {
+  width: 34px;
+  height: 34px;
+  background: rgba(18, 20, 23, 0.82);
+  border-color: var(--line);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.icon-btn.floating.on,
+.icon-btn.floating:hover {
+  background: var(--s3);
+  border-color: var(--line-2);
+}
+
+.text-btn {
+  height: 32px;
+  padding: 0 8px;
+  border-color: transparent;
+  color: var(--text-2);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 400;
+}
+.text-btn:hover {
+  color: var(--text);
+  border-color: transparent;
+}
+
+/* segmented control */
+.segmented {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  background: rgba(18, 20, 23, 0.82);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.segmented > button {
+  height: 28px;
+  padding: 0 10px;
+  border: none;
+  border-radius: var(--r-sm);
+  color: var(--text-2);
+  font-size: 12.5px;
+}
+.segmented > button:hover {
+  color: var(--text);
+  background: var(--s2);
+}
+.segmented > button.active {
+  color: var(--text);
+  background: var(--s3);
+}
+.segmented.full {
+  display: flex;
+}
+.segmented.full > button {
+  flex: 1;
+}
+
+/* range input */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 20px;
+  background: transparent;
+  cursor: pointer;
+  --fill: 0%;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--text) var(--fill), var(--line-2) var(--fill));
+}
+input[type="range"]::-moz-range-track {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--line-2);
+}
+input[type="range"]::-moz-range-progress {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--text);
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-top: -5.5px;
+  border-radius: 50%;
+  background: var(--text);
+  border: 3px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--text);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text);
+  border: 3px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--text);
+}
+
+/* checkbox (used by "follow" in the trace toolbar) */
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-2);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.check input {
+  accent-color: var(--text);
+  width: 14px;
+  height: 14px;
   margin: 0;
 }
 
-/* Persistent advisory: an M3 assist chip on the tertiary role. It cannot be
-   dismissed; clicking it opens the Limits tab. */
-.disclaimer {
-  margin-left: auto;
-  flex: none;
-  color: var(--md-on-tertiary-container);
-  background: color-mix(in srgb, var(--md-tertiary-container) 55%, transparent);
-  border: 1px solid color-mix(in srgb, var(--md-tertiary) 55%, transparent);
-  border-radius: var(--md-shape-s);
-  height: 32px;
-  padding: 0 12px;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.3px;
-  white-space: nowrap;
+/* switch */
+.switch-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+  cursor: pointer;
+  position: relative;
 }
-.disclaimer:hover {
-  background: color-mix(in srgb, var(--md-tertiary-container) 80%, transparent);
-  border-color: var(--md-tertiary);
+.switch-row input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.switch-text {
+  display: grid;
+  gap: 1px;
+}
+.switch-text > span {
+  font-size: 13.5px;
+}
+.switch-text small {
+  font-size: 11.5px;
+  color: var(--text-3);
+}
+.switch {
+  position: relative;
+  width: 32px;
+  height: 18px;
+  border-radius: 9px;
+  background: var(--s3);
+  border: 1px solid var(--line-2);
+  transition: background-color var(--ease), border-color var(--ease);
+}
+.switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--text-3);
+  transition: transform var(--ease), background-color var(--ease);
+}
+.switch-row input:checked + .switch {
+  background: var(--text);
+  border-color: var(--text);
+}
+.switch-row input:checked + .switch::after {
+  transform: translateX(14px);
+  background: var(--bg);
+}
+.switch-row input:focus-visible + .switch {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
 }
 
-.case-meta {
-  display: flex;
-  gap: 6px;
-  min-width: 0;
+/* ===== app shell ========================================================= */
+
+.app {
+  display: grid;
+  grid-template-rows: 52px minmax(0, 1fr);
+  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
 }
-.meta-chip {
-  flex: none;
-  height: 24px;
-  display: inline-flex;
+
+/* --- top bar ------------------------------------------------------------- */
+
+.topbar {
+  display: flex;
   align-items: center;
-  padding: 0 10px;
-  border-radius: var(--md-shape-full);
-  background: var(--md-surface-container-high);
-  color: var(--md-on-surface-variant);
-  font-size: 12px;
-  letter-spacing: 0.3px;
-  white-space: nowrap;
+  gap: 14px;
+  padding: 0 12px 0 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+  min-width: 0;
 }
-.dim {
-  color: var(--md-on-surface-variant);
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: 0.4px;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  color: var(--text);
+}
+.wordmark {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.topbar-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--line-2);
+  flex: none;
 }
 
-/* M3 outlined select */
 .library {
   display: flex;
   align-items: center;
@@ -203,240 +424,325 @@ header {
   min-width: 0;
 }
 .library label {
-  color: var(--md-on-surface-variant);
-  font-size: 11px;
-  letter-spacing: 0.6px;
-  text-transform: uppercase;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
 }
 .library select {
-  background: var(--md-surface-container-high);
-  color: var(--md-on-surface);
-  border: 1px solid var(--md-outline-variant);
-  border-radius: var(--md-shape-s);
-  height: 36px;
-  padding: 0 12px;
-  width: 400px;
-  max-width: 34vw;
-  font: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 34px;
+  max-width: 420px;
+  min-width: 0;
+  width: 100%;
+  padding: 0 30px 0 10px;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 20 20' fill='none' stroke='%23a3a7ad' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  font-size: 14px;
   font-weight: 500;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: background-color var(--ease), border-color var(--ease);
 }
-.library select:hover,
+.library select:hover {
+  background-color: var(--s2);
+}
 .library select:focus-visible {
-  border-color: var(--md-primary);
+  border-color: var(--focus);
   outline: none;
 }
-
-/* ===== layout ============================================================ */
-
-main {
-  flex: 1;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) var(--sidebar-width, 400px);
-  min-height: 0;
-  position: relative;
-  background: var(--md-surface);
+.library select option {
+  background: var(--s1);
+  color: var(--text);
 }
 
-.viewport {
+.case-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-3);
+  white-space: nowrap;
+  min-width: 0;
+  overflow: hidden;
+}
+.case-meta > span + span::before {
+  content: "·";
+  margin-right: 6px;
+  color: var(--line-2);
+}
+.case-meta .synthetic {
+  color: var(--t3);
+}
+
+.topbar-end {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+}
+.disclaimer {
+  height: 30px;
+  padding: 0 10px 0 8px;
+  border-color: var(--line);
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 400;
+}
+.disclaimer:hover {
+  color: var(--text);
+}
+.disclaimer .icon {
+  color: var(--t3);
+}
+
+/* --- workspace ----------------------------------------------------------- */
+
+.workspace {
   display: grid;
-  /* An explicit minmax(0, 1fr) column, not the implicit auto one: the WebGL
-     canvas lags a frame behind when the sidebar collapses, and an auto column
-     sizes itself to that stale width - which pushed the whole row out under the
-     sidebar and made the controls unclickable. */
+  grid-template-columns: minmax(0, 1fr) auto var(--inspector-w, 320px);
+  min-height: 0;
+  min-width: 0;
+}
+.app.sidebar-collapsed .workspace {
   grid-template-columns: minmax(0, 1fr);
-  /* toolbar | 3D stage | transport | divider | traces */
-  grid-template-rows: auto minmax(200px, 1fr) auto auto var(--trace-height, 230px);
+}
+.app.sidebar-collapsed .inspector {
+  display: none;
+}
+
+.stage-column {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  /* stage | transport | divider | traces */
+  grid-template-rows: minmax(220px, 1fr) auto auto var(--trace-height, 230px);
   min-height: 0;
   min-width: 0;
   overflow: hidden;
 }
 
-.app.sidebar-collapsed main {
-  grid-template-columns: minmax(0, 1fr) 0px;
+.stage {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  min-height: 0;
+  min-width: 0;
 }
-.app.sidebar-collapsed aside {
-  display: none;
-}
-
-/* M3 icon button, docked to the sidebar edge */
-.sidebar-toggle {
-  position: absolute;
-  top: 6px;
-  right: var(--sidebar-width, 400px);
-  z-index: 5;
-  width: 24px;
-  height: 40px;
-  padding: 0;
-  border: 1px solid var(--md-outline-variant);
-  border-right: none;
-  border-radius: var(--md-shape-full) 0 0 var(--md-shape-full);
-  background: var(--md-surface-container-high);
-  color: var(--md-on-surface-variant);
-}
-.app.sidebar-collapsed .sidebar-toggle {
-  right: 0;
-}
-
-/* --- stage toolbar: what to look at (lead) and from where (view) ---------- */
-
-.stage-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 8px 40px 8px 12px;
-  background: var(--md-surface-container-low);
-  border-bottom: 1px solid var(--md-outline-variant);
-  flex-wrap: wrap;
-  row-gap: 8px;
-}
-.stage-toolbar::-webkit-scrollbar {
-  display: none;
-}
-.group-label {
-  color: var(--md-on-surface-variant);
-  font-size: 10px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-}
-
-/* Lead picker: two labelled groups of filter chips */
-.lead-picker {
-  display: flex;
-  gap: 14px;
-  flex: none;
-}
-.lead-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.lead-buttons {
-  display: flex;
-  gap: 4px;
-}
-.lead-picker button {
-  min-width: 44px;
-  height: 34px;
-  padding: 0 10px;
-  border-radius: var(--md-shape-s);
-  background: var(--md-surface-container-high);
-  border: 1px solid transparent;
-  color: var(--md-on-surface);
-  font-size: 14px;
-  font-weight: 500;
-}
-.lead-picker button:hover {
-  border-color: var(--md-tertiary);
-  background: color-mix(in srgb, var(--md-tertiary) 10%, var(--md-surface-container-high));
-}
-.lead-picker button.active {
-  background: var(--md-tertiary);
-  border-color: var(--md-tertiary);
-  color: var(--md-on-tertiary);
-  font-weight: 700;
-}
-
-.view-presets {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-left: auto;
-  flex: none;
-}
-
-/* M3 segmented button group, reused by view, step and speed controls */
-.btn-group {
-  display: inline-flex;
-  flex: none;
-}
-.btn-group > button {
-  border-radius: 0;
-  margin-left: -1px;
-  height: 32px;
-  padding: 0 12px;
-  border-color: var(--md-outline-variant);
-  font-size: 12px;
-}
-.btn-group > button:first-child {
-  margin-left: 0;
-  border-radius: var(--md-shape-full) 0 0 var(--md-shape-full);
-  padding-left: 14px;
-}
-.btn-group > button:last-child {
-  border-radius: 0 var(--md-shape-full) var(--md-shape-full) 0;
-  padding-right: 14px;
-}
-.btn-group > button:hover,
-.btn-group > button.active {
-  position: relative;
-  z-index: 1;
-}
-.btn-group.full {
-  display: flex;
-}
-.btn-group.full > button {
-  flex: 1;
-}
-
-/* --- the 3D stage -------------------------------------------------------- */
 
 .scene-wrap {
   position: relative;
-  /* A size container, so overlays can respond to the stage's own height. */
-  container-type: size;
   min-height: 0;
   min-width: 0;
   overflow: hidden;
-  background:
-    radial-gradient(ellipse at 50% 42%, #161b26 0%, var(--md-surface-container-lowest) 70%);
+  background: var(--stage);
 }
 .placeholder {
   display: grid;
   place-items: center;
   height: 100%;
-  color: var(--md-on-surface-variant);
+  color: var(--text-3);
 }
 
-.scene-overlay-top {
+/* --- lead picker: vertical channel rail (wide) --------------------------- */
+
+.lead-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 64px;
+  padding: 14px 8px;
+  background: var(--bg);
+  border-right: 1px solid var(--line);
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.lead-picker::-webkit-scrollbar {
+  display: none;
+}
+.lead-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.lead-group .eyebrow {
+  text-align: center;
+  padding-bottom: 6px;
+}
+.lead-group + .lead-group {
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.lead-picker button {
+  height: 30px;
+  padding: 0;
+  border-color: transparent;
+  border-radius: var(--r-sm);
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 500;
+}
+.lead-picker button:hover {
+  color: var(--text);
+  background: var(--s2);
+}
+.lead-picker button.active {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+  font-weight: 600;
+}
+
+/* --- stage overlays ------------------------------------------------------ */
+
+.stage-top {
   position: absolute;
-  top: 12px;
-  left: 12px;
-  right: 12px;
+  top: 14px;
+  left: 16px;
+  right: 14px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 12px;
   pointer-events: none;
 }
-.scene-overlay-top > * {
+.stage-top > * {
+  pointer-events: auto;
+}
+.stage-tools {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.stage-readout {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  pointer-events: none !important;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+}
+.readout-lead {
+  font-size: 34px;
+  line-height: 34px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--c-lead);
+}
+.readout-meta {
+  display: grid;
+  gap: 2px;
+  padding-bottom: 2px;
+}
+.readout-value {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 15px;
+  line-height: 18px;
+  font-weight: 500;
+}
+.readout-value small {
+  font-size: 11px;
+  color: var(--text-3);
+}
+.readout-value.pos {
+  color: var(--c-proj);
+}
+.readout-value.neg {
+  color: var(--c-vector);
+}
+.readout-sub {
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--text-3);
+}
+
+.stage-bottom {
+  position: absolute;
+  left: 16px;
+  right: 120px;
+  bottom: 14px;
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  pointer-events: none;
+}
+.stage-bottom > * {
   pointer-events: auto;
 }
 
-/* Legend: bottom-left, out of the way of the heart and the live labels */
+.conduction-banner {
+  height: 30px;
+  gap: 8px;
+  padding: 0 10px;
+  border-color: rgba(240, 176, 63, 0.32);
+  background: rgba(240, 176, 63, 0.08);
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 400;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  max-width: 100%;
+}
+.conduction-banner:hover {
+  background: rgba(240, 176, 63, 0.14);
+  border-color: rgba(240, 176, 63, 0.5);
+}
+.conduction-banner .tier-dot {
+  background: var(--t3);
+}
+.conduction-banner b {
+  font-weight: 500;
+  color: var(--t3);
+}
+.conduction-banner .banner-text {
+  display: inline-flex;
+  gap: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.conduction-banner .banner-detail {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--text-3);
+}
+.conduction-banner .icon {
+  color: var(--t3);
+}
+.conduction-banner.not-applicable {
+  border-color: rgba(255, 107, 87, 0.38);
+  background: rgba(255, 107, 87, 0.08);
+}
+.conduction-banner.not-applicable b,
+.conduction-banner.not-applicable .icon {
+  color: var(--c-vector);
+}
+.conduction-banner.not-applicable .tier-dot {
+  background: var(--c-vector);
+}
+
 .legend {
-  position: absolute;
-  left: 12px;
-  bottom: 12px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 14px;
-  flex-wrap: wrap;
+  height: 30px;
+  padding: 0 10px;
   font-size: 12px;
-  letter-spacing: 0.3px;
-  color: var(--md-on-surface-variant);
-  background: color-mix(in srgb, var(--md-surface-container) 82%, transparent);
-  backdrop-filter: blur(6px);
-  border: 1px solid var(--md-outline-variant);
-  border-radius: var(--md-shape-m);
-  padding: 6px 12px;
-  pointer-events: none;
-  max-width: calc(100% - 160px);
-}
-@container (max-height: 440px) {
-  .legend {
-    display: none;
-  }
+  color: var(--text-2);
+  background: rgba(18, 20, 23, 0.82);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  pointer-events: none !important;
+  white-space: nowrap;
 }
 .legend > span {
   display: inline-flex;
@@ -444,191 +750,168 @@ main {
   gap: 6px;
 }
 .swatch {
-  width: 16px;
-  height: 3px;
-  border-radius: 2px;
   display: inline-block;
+  width: 14px;
+  height: 2px;
+  border-radius: 1px;
 }
 .swatch.vector {
-  background: var(--vector);
+  background: var(--c-vector);
 }
 .swatch.lead {
-  background: var(--lead);
+  background: var(--c-lead);
 }
 .swatch.projection {
-  background: var(--projection);
+  background: var(--c-proj);
 }
 
-/* Display options popover */
+/* --- popover (display options) ------------------------------------------ */
+
 .scene-options {
   position: relative;
-  margin-left: auto;
 }
-.options-toggle {
-  background: color-mix(in srgb, var(--md-surface-container-high) 88%, transparent);
-  backdrop-filter: blur(6px);
-  border-color: var(--md-outline-variant);
-  height: 34px;
-}
-.options-card {
+.popover {
   position: absolute;
   top: 42px;
   right: 0;
-  width: 300px;
-  max-height: calc(100cqh - 60px);
+  z-index: 40;
+  width: 320px;
+  max-height: 64vh;
   overflow-y: auto;
-  z-index: 30;
+  background: #15181c;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-lg);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55);
+  scrollbar-width: thin;
+}
+.popover-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 8px 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--line);
+}
+.popover-section {
   display: grid;
   gap: 6px;
-  padding: 14px 16px 16px;
-  background: var(--md-surface-container-high);
-  border: 1px solid var(--md-outline-variant);
-  border-radius: var(--md-shape-l);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  padding: 12px 16px;
 }
-.options-card h4 {
-  margin: 8px 0 2px;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  color: var(--md-on-surface-variant);
+.popover-section + .popover-section {
+  border-top: 1px solid var(--line);
 }
-.options-card h4:first-child {
-  margin-top: 0;
+.popover-section .eyebrow {
+  padding-bottom: 4px;
 }
-.options-card .hint {
-  margin: 2px 0 0;
-  font-size: 11px;
-  line-height: 15px;
-  color: var(--md-on-surface-variant);
+.popover .hint {
+  margin: 4px 0 0;
+  font-size: 11.5px;
+  line-height: 16px;
+  color: var(--text-3);
 }
-.switch {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  column-gap: 10px;
-  align-items: center;
-  padding: 6px 8px;
-  margin: 0 -8px;
-  border-radius: var(--md-shape-s);
-  cursor: pointer;
-}
-.switch:hover {
-  background: color-mix(in srgb, var(--md-on-surface) 6%, transparent);
-}
-.switch input {
-  grid-row: span 2;
-  width: 18px;
-  height: 18px;
-  accent-color: var(--md-primary);
-}
-.switch span {
-  font-size: 14px;
-}
-.switch small {
-  font-size: 11px;
-  color: var(--md-on-surface-variant);
-}
-.option-row {
+.slider-row {
   display: grid;
   grid-template-columns: auto 1fr auto;
-  gap: 10px;
   align-items: center;
-  font-size: 13px;
+  gap: 12px;
+  padding-top: 6px;
+  font-size: 13.5px;
 }
-.option-row .readout {
-  font-family: "Roboto Mono", ui-monospace, monospace;
+.slider-row .mono {
   font-size: 12px;
-  min-width: 52px;
+  color: var(--text-2);
+  min-width: 50px;
   text-align: right;
 }
 
-/* ===== Tier-3 notice: a compact chip that expands, never dismissible ======= */
+/* ===== transport ========================================================= */
 
-.conduction-banner {
-  max-width: min(560px, 70%);
-  background: color-mix(in srgb, var(--md-tertiary-container) 70%, var(--md-surface));
-  color: var(--md-on-tertiary-container);
-  border: 1px solid var(--md-tertiary);
-  border-radius: var(--md-shape-m);
-  font-size: 12px;
-  line-height: 17px;
-  overflow: hidden;
-  backdrop-filter: blur(6px);
-}
-.conduction-banner .banner-head {
+.controls {
   display: flex;
   align-items: center;
-  gap: 10px;
-  width: 100%;
-  height: 34px;
-  padding: 0 12px;
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  color: inherit;
-  font-weight: 400;
+  gap: 12px;
+  min-height: 56px;
+  padding: 10px 16px;
+  background: var(--bg);
+  border-top: 1px solid var(--line);
+}
+button.play {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 50%;
+  flex: none;
+}
+.step-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  flex: none;
+}
+.scrub-wrap {
+  flex: 1;
+  min-width: 60px;
+  display: flex;
+  align-items: center;
+}
+.controls .readout {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
   font-size: 12px;
-  text-align: left;
+  color: var(--text-3);
   white-space: nowrap;
+  min-width: 108px;
+  text-align: right;
 }
-.conduction-banner .banner-head:hover {
-  background: color-mix(in srgb, var(--md-tertiary) 12%, transparent);
-}
-.conduction-banner .tier-dot {
-  background: var(--md-tertiary);
-}
-.conduction-banner strong {
-  color: var(--md-tertiary);
-  font-weight: 600;
-  letter-spacing: 0.1px;
-}
-.conduction-banner .why {
-  margin-left: auto;
-  padding-left: 8px;
-  color: var(--md-tertiary);
-  font-weight: 500;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-.banner-body {
-  display: grid;
-  gap: 8px;
-  padding: 4px 14px 12px;
-  max-height: 40vh;
-  overflow-y: auto;
-}
-.conduction-banner .agreement {
-  color: color-mix(in srgb, var(--md-on-tertiary-container) 85%, transparent);
-}
-.conduction-banner .agreement.warn {
-  color: var(--md-error);
+.controls .readout b {
+  color: var(--text);
   font-weight: 500;
 }
-.conduction-banner.not-applicable {
-  border-color: var(--md-error);
-  background: color-mix(in srgb, var(--md-error-container) 40%, var(--md-surface));
-  color: var(--md-on-error-container);
+.controls .readout .sep {
+  color: var(--line-2);
 }
-.conduction-banner.not-applicable strong,
-.conduction-banner.not-applicable .why {
-  color: var(--md-error);
+.speed {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex: none;
 }
-.conduction-banner.not-applicable .tier-dot {
-  background: var(--md-error);
+.speed select {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 32px;
+  padding: 0 26px 0 10px;
+  background: transparent;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-md);
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+}
+.speed select:hover {
+  background: var(--s2);
+}
+.speed select option {
+  background: var(--s1);
+}
+.speed .icon {
+  position: absolute;
+  right: 8px;
+  pointer-events: none;
+  color: var(--text-3);
 }
 
-/* ===== divider + trace toolbar =========================================== */
+/* ===== divider + trace toolbar (wide) ==================================== */
 
 .splitter {
   display: flex;
   align-items: center;
   gap: 12px;
+  height: 44px;
   padding: 0 12px;
-  height: 38px;
-  background: var(--md-surface-container-low);
-  border-top: 1px solid var(--md-outline-variant);
-  border-bottom: 1px solid var(--md-outline-variant);
+  background: var(--bg);
+  border-top: 1px solid var(--line);
   cursor: row-resize;
   touch-action: none;
   overflow-x: auto;
@@ -639,41 +922,18 @@ main {
 }
 .splitter.collapsed {
   cursor: default;
+  justify-content: flex-end;
 }
 .splitter .grip {
-  width: 36px;
-  height: 4px;
-  border-radius: var(--md-shape-full);
-  background: var(--md-outline-variant);
+  width: 28px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--line-2);
   flex: none;
   pointer-events: none;
 }
 .splitter:hover .grip {
-  background: var(--md-primary);
-}
-
-/* M3 segmented button */
-.trace-mode {
-  display: flex;
-  gap: 0;
-  margin-left: auto;
-  flex: none;
-}
-.trace-mode button {
-  border-radius: 0;
-  border-left-width: 0;
-  height: 30px;
-  padding: 0 12px;
-  font-size: 12px;
-}
-.trace-mode button:first-child {
-  border-left-width: 1px;
-  border-radius: var(--md-shape-full) 0 0 var(--md-shape-full);
-  padding-left: 14px;
-}
-.trace-mode button:last-child {
-  border-radius: 0 var(--md-shape-full) var(--md-shape-full) 0;
-  padding-right: 14px;
+  background: var(--text-3);
 }
 
 .trace-zoom {
@@ -684,49 +944,80 @@ main {
   flex: none;
 }
 .trace-zoom .axis-group {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 2px;
-  padding: 2px 8px 2px 4px;
-  border-radius: var(--md-shape-full);
-  background: var(--md-surface-container-high);
+  gap: 0;
+  height: 30px;
+  padding: 0 4px 0 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
 }
-.trace-zoom button {
-  height: 26px;
-  min-width: 26px;
-  padding: 0 10px;
-  font-size: 13px;
+.trace-zoom .axis-group .label {
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-right: 4px;
 }
 .trace-zoom .axis-group button {
-  background: transparent;
+  width: 24px;
+  height: 24px;
+  padding: 0;
   border-color: transparent;
-  color: var(--md-on-surface-variant);
-  padding: 0 6px;
+  color: var(--text-2);
+  font-size: 15px;
+  font-weight: 400;
+  border-radius: var(--r-sm);
 }
 .trace-zoom .axis-group button:hover {
-  background: color-mix(in srgb, var(--md-primary) 12%, transparent);
-  color: var(--md-primary);
-}
-.trace-zoom .label {
-  color: var(--md-on-surface-variant);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  padding: 0 2px;
+  color: var(--text);
+  background: var(--s2);
 }
 .trace-zoom .readout {
-  font-family: "Roboto Mono", ui-monospace, monospace;
-  font-size: 11px;
-  color: var(--md-on-surface);
-  min-width: 58px;
-  text-align: right;
+  font-family: var(--mono);
   font-variant-numeric: tabular-nums;
+  font-size: 11.5px;
+  color: var(--text);
+  min-width: 62px;
+  text-align: right;
+  padding-right: 6px;
 }
-.trace-zoom .check {
-  font-size: 11px;
+.trace-zoom > button {
+  height: 30px;
+  padding: 0 10px;
+  border-color: var(--line);
+  color: var(--text-2);
+  font-size: 12px;
+}
+.trace-zoom > button:hover,
+.trace-zoom > button.active {
+  color: var(--text);
 }
 
-/* ===== the traces ======================================================== */
+.trace-mode {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  margin-left: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  flex: none;
+}
+.trace-mode button {
+  height: 26px;
+  padding: 0 10px;
+  border: none;
+  border-radius: var(--r-sm);
+  color: var(--text-2);
+  font-size: 12px;
+}
+.trace-mode button.active {
+  background: var(--s3);
+  color: var(--text);
+}
+
+/* ===== traces ============================================================ */
 
 .trace-panel {
   position: relative;
@@ -738,14 +1029,13 @@ main {
   background: var(--trace-surface);
 }
 .trace-panel.empty {
-  background: var(--md-surface-container-lowest);
+  background: var(--stage);
 }
 .trace-ruler {
   display: block;
   flex: none;
-  border-bottom: 1px solid var(--md-outline-variant);
+  border-bottom: 1px solid var(--line);
 }
-/* The time under the playhead, pinned to the ruler */
 .trace-time-chip {
   position: absolute;
   top: 2px;
@@ -753,11 +1043,12 @@ main {
   z-index: 3;
   transform: translateX(-200px);
   padding: 0 6px;
-  border-radius: var(--md-shape-full);
-  background: var(--md-error-container);
-  color: var(--md-on-error-container);
-  font-family: "Roboto Mono", ui-monospace, monospace;
+  border-radius: 4px;
+  background: var(--c-vector);
+  color: #1a0805;
+  font-family: var(--mono);
   font-size: 10px;
+  font-weight: 500;
   line-height: 16px;
   pointer-events: none;
   white-space: nowrap;
@@ -768,9 +1059,9 @@ main {
   overflow-y: auto;
   overflow-x: hidden;
   cursor: crosshair;
-  touch-action: none;
+  touch-action: pan-y;
   scrollbar-width: thin;
-  scrollbar-color: var(--md-outline-variant) transparent;
+  scrollbar-color: var(--line-2) transparent;
 }
 .trace-scroll.box-mode {
   cursor: cell;
@@ -786,253 +1077,301 @@ main {
   top: 0;
   bottom: 0;
   left: 0;
-  width: 2px;
-  margin-left: -1px;
-  background: var(--md-error);
+  width: 1.5px;
+  margin-left: -0.75px;
+  background: var(--c-vector);
   pointer-events: none;
   will-change: transform;
 }
 .trace-band {
   position: absolute;
-  border: 1px solid var(--md-primary);
-  background: color-mix(in srgb, var(--md-primary) 18%, transparent);
-  border-radius: var(--md-shape-xs);
+  border: 1px solid var(--focus);
+  background: rgba(126, 169, 255, 0.14);
+  border-radius: 3px;
   pointer-events: none;
 }
 
-/* ===== transport controls ================================================
-   One row of time controls between the stage and the traces: both views are
-   driven by it, so it sits where both can see it. */
+/* ===== inspector ========================================================= */
 
-.controls {
-  border-top: 1px solid var(--md-outline-variant);
-  background: var(--md-surface-container);
-  padding: 8px 12px;
-}
-.controls .row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  row-gap: 8px;
-}
-.controls .readout {
-  color: var(--md-on-surface);
-  font-family: "Roboto Mono", ui-monospace, monospace;
-  font-size: 12px;
-  font-variant-numeric: tabular-nums;
-  min-width: 118px;
-  text-align: center;
-  white-space: nowrap;
-}
-.controls .scrub {
-  flex: 1;
-  min-width: 60px;
-}
-.controls .check {
-  white-space: nowrap;
-}
-.controls .speed > button {
-  padding: 0 9px;
-  min-width: 44px;
-}
-.controls .speed > button:first-child {
-  padding-left: 12px;
-}
-.controls .speed > button:last-child {
-  padding-right: 12px;
-}
-button.play {
-  min-width: 96px;
-  height: 36px;
-  gap: 8px;
-}
-.play-icon {
-  font-size: 11px;
-  letter-spacing: -1px;
-}
-
-/* ===== M3 buttons ======================================================== */
-
-button {
-  /* outlined button */
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  height: 32px;
-  padding: 0 14px;
-  background: transparent;
-  color: var(--md-on-surface);
-  border: 1px solid var(--md-outline);
-  border-radius: var(--md-shape-full);
-  /* label-large */
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.1px;
-  cursor: pointer;
-  transition:
-    background-color 90ms linear,
-    border-color 90ms linear,
-    color 90ms linear;
-}
-button:hover {
-  background: color-mix(in srgb, var(--md-primary) 8%, transparent);
-  border-color: var(--md-primary);
-}
-button:active {
-  background: color-mix(in srgb, var(--md-primary) 12%, transparent);
-}
-button:focus-visible {
-  outline: 2px solid var(--md-primary);
-  outline-offset: 2px;
-}
-/* tonal / selected */
-button.active {
-  background: var(--md-secondary-container);
-  color: var(--md-on-secondary-container);
-  border-color: var(--md-secondary);
-}
-/* filled */
-button.primary {
-  background: var(--md-primary);
-  color: var(--md-on-primary);
-  border-color: transparent;
-  min-width: 84px;
-  font-weight: 600;
-}
-button.primary:hover {
-  background: color-mix(in srgb, var(--md-primary) 90%, white);
-  border-color: transparent;
-}
-
-/* M3 checkbox row */
-.check {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  letter-spacing: 0.4px;
-  color: var(--md-on-surface-variant);
-  cursor: pointer;
-}
-.check input[type="checkbox"] {
-  accent-color: var(--md-primary);
-  width: 16px;
-  height: 16px;
-}
-
-input[type="range"] {
-  accent-color: var(--md-primary);
-  height: 20px;
-}
-
-/* ===== side panel ======================================================== */
-
-aside {
-  border-left: 1px solid var(--md-outline-variant);
-  background: var(--md-surface-container-low);
-  display: flex;
-  flex-direction: column;
+.inspector {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   min-height: 0;
+  background: var(--s1);
 }
 
-/* M3 primary tabs */
+/* ===== resize handles ==================================================== */
+
+.resize-handle {
+  position: relative;
+  z-index: 6;
+  flex: none;
+  background: var(--line);
+  touch-action: none;
+  outline: none;
+  transition: background-color var(--ease);
+}
+.resize-handle::before {
+  /* a generous invisible hit area around the 1px rule */
+  content: "";
+  position: absolute;
+}
+.resize-handle.x {
+  width: 1px;
+  cursor: col-resize;
+}
+.resize-handle.x::before {
+  top: 0;
+  bottom: 0;
+  left: -5px;
+  right: -5px;
+}
+.resize-handle.y {
+  height: 1px;
+  cursor: row-resize;
+}
+.resize-handle.y::before {
+  left: 0;
+  right: 0;
+  top: -6px;
+  bottom: -6px;
+}
+.resize-handle .grip {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 2px;
+  background: var(--line-2);
+  opacity: 0;
+  transition: opacity var(--ease), background-color var(--ease);
+}
+.resize-handle.x .grip {
+  width: 4px;
+  height: 32px;
+}
+.resize-handle.y .grip {
+  width: 32px;
+  height: 4px;
+}
+.resize-handle:hover,
+.resize-handle.active,
+.resize-handle:focus-visible {
+  background: var(--text-3);
+}
+.resize-handle:hover .grip,
+.resize-handle.active .grip,
+.resize-handle:focus-visible .grip {
+  opacity: 1;
+  background: var(--text-2);
+}
+
+/* the dock's handle is a visible grabber, like a bottom sheet */
+.resize-handle.dock-handle {
+  height: 16px;
+  background: var(--s1);
+}
+.resize-handle.dock-handle::before {
+  top: -4px;
+  bottom: 0;
+}
+.resize-handle.dock-handle .grip {
+  opacity: 1;
+  width: 36px;
+  background: var(--line-2);
+}
+.resize-handle.dock-handle:hover,
+.resize-handle.dock-handle.active {
+  background: var(--s1);
+}
+
 .tabs {
   display: flex;
-  gap: 0;
-  padding: 0;
-  background: var(--md-surface-container);
-  border-bottom: 1px solid var(--md-outline-variant);
+  gap: 4px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar {
+  display: none;
 }
 .tabs button {
-  flex: 1;
-  height: 48px;
+  position: relative;
+  height: 46px;
+  padding: 0 10px;
   border: none;
   border-radius: 0;
   background: none;
-  color: var(--md-on-surface-variant);
+  color: var(--text-3);
   font-size: 13px;
-  position: relative;
-  padding: 0 8px;
+  font-weight: 500;
 }
 .tabs button:hover {
-  background: color-mix(in srgb, var(--md-on-surface) 8%, transparent);
-  border: none;
+  background: none;
+  color: var(--text-2);
 }
 .tabs button.active {
-  background: none;
-  color: var(--md-primary);
+  color: var(--text);
 }
 .tabs button.active::after {
   content: "";
   position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 0;
-  height: 3px;
-  border-radius: 3px 3px 0 0;
-  background: var(--md-primary);
+  left: 10px;
+  right: 10px;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--text);
 }
 
 .panels {
   overflow-y: auto;
-  padding: 12px 12px 32px;
-  display: grid;
-  gap: 12px;
+  padding: 20px 20px 40px;
   scrollbar-width: thin;
-  scrollbar-color: var(--md-outline-variant) transparent;
+  scrollbar-color: var(--line-2) transparent;
 }
 
-/* M3 card */
 .panel {
-  background: var(--md-surface-container);
-  border: none;
-  border-radius: var(--md-shape-m);
-  padding: 16px;
+  margin: 0;
+}
+.panel + .panel {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
 }
 .panel h2 {
-  /* title-medium */
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: 0.15px;
-  font-weight: 500;
-  margin: 0 0 12px;
   display: flex;
   align-items: center;
-  gap: 8px;
   flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 0 0 10px;
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
 }
 .panel h3 {
-  /* label-medium */
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: 0.5px;
+  margin: 20px 0 8px;
+  font-size: 10.5px;
+  line-height: 14px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--md-on-surface-variant);
-  margin: 16px 0 8px;
+  color: var(--text-3);
 }
 .panel .lede {
-  margin: 0 0 12px;
+  margin: 0 0 14px;
   font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0.25px;
+  line-height: 22px;
+  color: var(--text-2);
+}
+.panel .lede b {
+  color: var(--text);
+  font-weight: 500;
 }
 .panel.teaching {
-  background: var(--md-surface-container-high);
-  border-left: 4px solid var(--md-primary);
+  padding: 16px;
+  background: var(--s2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+}
+.panel + .panel.teaching {
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+.panel.teaching h2 {
+  font-size: 14px;
+}
+.panel.teaching .lede {
+  margin: 0;
+}
+.panel .row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.panel .row .readout {
+  font-family: var(--mono);
+  font-size: 12px;
+  min-width: 40px;
+  text-align: right;
+}
+
+details.more {
+  margin-top: 14px;
+  font-size: 12.5px;
+  line-height: 19px;
+  color: var(--text-2);
+}
+details.more summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-3);
+  user-select: none;
+}
+details.more summary::-webkit-details-marker {
+  display: none;
+}
+details.more summary::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform var(--ease);
+}
+details.more[open] summary::before {
+  transform: rotate(45deg);
+}
+details.more summary:hover {
+  color: var(--text);
+}
+details.more p {
+  margin: 10px 0 0;
+}
+details.more .caveats {
+  margin-top: 10px;
+}
+details.more .mono {
+  font-size: 11px;
+  word-break: break-word;
+}
+
+.key {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-2);
+}
+.key > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .footnote {
-  color: var(--md-on-surface-variant);
+  margin: 14px 0 0;
   font-size: 12px;
-  line-height: 16px;
-  letter-spacing: 0.4px;
-  margin: 12px 0 0;
+  line-height: 18px;
+  color: var(--text-3);
+}
+.footnote b {
+  color: var(--text-2);
+  font-weight: 500;
 }
 .footnote.synthetic {
-  color: var(--md-tertiary);
+  color: var(--text-2);
+}
+.footnote.synthetic b {
+  color: var(--t3);
 }
 
 table.kv {
@@ -1040,239 +1379,433 @@ table.kv {
   border-collapse: collapse;
   font-size: 13px;
 }
+table.kv tr + tr th,
+table.kv tr + tr td {
+  border-top: 1px solid var(--line);
+}
 table.kv th {
   text-align: left;
   font-weight: 400;
-  color: var(--md-on-surface-variant);
-  padding: 4px 8px 4px 0;
+  color: var(--text-3);
+  padding: 8px 12px 8px 0;
   vertical-align: top;
   white-space: nowrap;
+  font-size: 12.5px;
 }
 table.kv td {
-  padding: 4px 0;
-  font-family: "Roboto Mono", ui-monospace, monospace;
+  text-align: right;
+  padding: 8px 0;
+  font-family: var(--mono);
   font-variant-numeric: tabular-nums;
+  font-size: 12.5px;
+  line-height: 18px;
+  vertical-align: top;
+}
+table.kv td.dim,
+table.kv .dim {
+  color: var(--text-3);
 }
 table.kv.compact td {
-  padding: 3px 8px 3px 0;
+  padding-right: 8px;
 }
 table.kv .pos {
-  color: var(--md-secondary);
+  color: var(--c-proj);
 }
 table.kv .neg {
-  color: var(--md-error);
+  color: var(--c-vector);
+}
+table.kv b {
+  font-weight: 500;
 }
 
-/* M3 assist chip */
 .tier-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: 24px;
-  border: 1px solid;
-  border-radius: var(--md-shape-s);
-  padding: 0 10px;
+  height: 20px;
+  padding: 0 8px 0 7px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
   font-size: 11px;
   font-weight: 500;
-  letter-spacing: 0.4px;
   white-space: nowrap;
+  letter-spacing: 0.01em;
 }
 .tier-badge em {
   font-style: normal;
-  opacity: 0.75;
+  color: var(--text-3);
+  font-weight: 400;
 }
 .tier-dot {
+  display: inline-block;
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  display: inline-block;
+  flex: none;
 }
 
 .tier-list,
 .caveats,
 .warnings {
   margin: 0;
-  padding-left: 0;
+  padding: 0;
   list-style: none;
   display: grid;
   gap: 10px;
 }
-.tier-list li,
+.tier-list li {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--text-2);
+  justify-items: start;
+}
 .caveats li {
   font-size: 13px;
-  line-height: 18px;
+  line-height: 19px;
+  padding-left: 12px;
+  border-left: 2px solid var(--line-2);
+  color: var(--text-2);
 }
-.caveats li {
-  border-left: 2px solid var(--md-tertiary);
-  padding-left: 10px;
-  color: var(--md-on-surface-variant);
-}
-
 .warnings li {
   display: grid;
-  gap: 3px;
-  background: var(--md-surface-container-high);
-  border-left: 4px solid var(--md-outline);
-  border-radius: var(--md-shape-xs);
-  padding: 8px 10px;
+  gap: 4px;
+  padding: 10px 12px;
+  background: var(--s2);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--text-3);
+  border-radius: var(--r-md);
   font-size: 13px;
+  line-height: 19px;
 }
 .warnings li b {
-  text-transform: uppercase;
-  font-size: 11px;
-  letter-spacing: 0.6px;
+  font-size: 10.5px;
   font-weight: 500;
-}
-.warnings li.info {
-  border-color: var(--md-primary);
-}
-.warnings li.info b {
-  color: var(--md-primary);
-}
-.warnings li.warning {
-  border-color: var(--md-tertiary);
-}
-.warnings li.warning b {
-  color: var(--md-tertiary);
-}
-.warnings li.critical {
-  border-color: var(--md-error);
-  background: color-mix(in srgb, var(--md-error-container) 35%, var(--md-surface-container-high));
-}
-.warnings li.critical b {
-  color: var(--md-error);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 .warnings li span {
-  color: var(--md-on-surface-variant);
+  color: var(--text-2);
+}
+.warnings li.info {
+  border-left-color: var(--t1);
+}
+.warnings li.info b {
+  color: var(--t1);
+}
+.warnings li.warning {
+  border-left-color: var(--t3);
+}
+.warnings li.warning b {
+  color: var(--t3);
+}
+.warnings li.critical {
+  border-left-color: var(--c-vector);
+}
+.warnings li.critical b {
+  color: var(--c-vector);
 }
 
 .error {
   margin: 12px 16px;
   padding: 12px 16px;
-  border: 1px solid var(--md-error);
-  border-radius: var(--md-shape-m);
-  background: color-mix(in srgb, var(--md-error-container) 40%, var(--md-surface));
-  color: var(--md-on-error-container);
-}
-
-code {
-  font-family: "Roboto Mono", ui-monospace, monospace;
-  font-size: 12px;
-  background: var(--md-surface-container-highest);
-  border-radius: var(--md-shape-xs);
-  padding: 1px 5px;
+  border: 1px solid rgba(255, 107, 87, 0.4);
+  border-radius: var(--r-lg);
+  background: rgba(255, 107, 87, 0.08);
 }
 
 /* ===== 3D scene labels =================================================== */
 
 .scene-label {
-  font-family: Roboto, system-ui, sans-serif;
+  font-family: var(--font);
   font-size: 11px;
   line-height: 16px;
   white-space: nowrap;
   user-select: none;
-  letter-spacing: 0.4px;
+  color: var(--text-2);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
 }
 .scene-label.anatomy {
-  color: var(--md-on-surface-variant);
-  font-size: 10px;
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  letter-spacing: 1.2px;
+  color: var(--text-3);
 }
 .scene-label.chamber {
-  color: var(--md-on-tertiary-container);
-  font-size: 10.5px;
-  padding: 1px 6px;
-  border-radius: var(--md-shape-xs);
-  background: color-mix(in srgb, var(--md-tertiary-container) 70%, transparent);
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(236, 234, 230, 0.78);
 }
 .scene-label.conduction {
-  color: var(--md-tertiary);
   font-size: 10px;
   font-weight: 500;
-  letter-spacing: 0.5px;
+  color: var(--t3);
 }
 .scene-label.lead {
-  color: var(--md-on-tertiary);
-  background: var(--md-tertiary);
-  font-weight: 700;
-  padding: 1px 8px;
-  border-radius: var(--md-shape-full);
+  padding: 1px 7px;
+  border-radius: 5px;
+  background: var(--c-lead);
+  color: #1c1305;
+  font-weight: 600;
+  text-shadow: none;
 }
 .scene-label.lead-negative {
-  color: var(--md-tertiary);
-  border: 1px solid var(--md-tertiary);
-  padding: 0 7px;
-  border-radius: var(--md-shape-full);
-  background: color-mix(in srgb, var(--md-surface) 75%, transparent);
+  padding: 0 6px;
+  border-radius: 5px;
+  border: 1px solid var(--c-lead);
+  background: rgba(10, 11, 13, 0.7);
+  color: var(--c-lead);
+  text-shadow: none;
+}
+.scene-label.vector,
+.scene-label.projection {
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: rgba(10, 11, 13, 0.78);
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  font-weight: 500;
+  text-shadow: none;
 }
 .scene-label.vector {
-  color: var(--md-on-error-container);
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  background: color-mix(in srgb, var(--md-error-container) 80%, transparent);
-  padding: 1px 7px;
-  border-radius: var(--md-shape-xs);
+  color: var(--c-vector);
+  border: 1px solid rgba(255, 107, 87, 0.4);
 }
 .scene-label.projection {
-  color: var(--md-on-secondary-container);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  background: color-mix(in srgb, var(--md-secondary-container) 85%, transparent);
-  border: 1px solid var(--md-secondary);
-  padding: 1px 8px;
-  border-radius: var(--md-shape-xs);
+  color: var(--c-proj);
+  border: 1px solid rgba(60, 203, 148, 0.45);
 }
 .scene-label.projection[data-sign="neg"] {
-  color: var(--md-on-error-container);
-  background: color-mix(in srgb, var(--md-error-container) 85%, transparent);
-  border-color: var(--md-error);
+  color: var(--c-vector);
+  border-color: rgba(255, 107, 87, 0.4);
 }
 
-/* ===== responsive ======================================================== */
+/* ===== compact layout (tablet portrait, phone) =========================== */
 
-@media (max-width: 1400px) {
-  main {
-    --sidebar-width: 352px;
-  }
-  .case-meta .meta-chip:nth-child(n + 3) {
-    display: none;
-  }
+.is-compact .workspace {
+  grid-template-columns: minmax(0, 1fr);
+}
+.is-compact .stage-column {
+  /* stage | lead strip | transport | dock (resizable) */
+  grid-template-rows: minmax(180px, 1fr) auto auto var(--dock-h, 40vh);
+}
+.is-compact .stage {
+  grid-template-columns: minmax(0, 1fr);
 }
 
-@media (max-width: 1300px) {
-  main {
-    --sidebar-width: 320px;
-  }
-  .lead-picker button {
-    min-width: 36px;
-    padding: 0 7px;
-  }
-  .lead-buttons {
-    gap: 3px;
-  }
-  .btn-group > button {
-    padding: 0 9px;
-  }
+.is-compact .lead-picker {
+  flex-direction: row;
+  gap: 20px;
+  width: auto;
+  padding: 8px 12px;
+  border-right: none;
+  border-top: 1px solid var(--line);
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+/* fade the strip's edges so it reads as scrollable */
+.is-compact .lead-picker {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 28px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 28px), transparent 100%);
+}
+.is-compact .lead-group + .lead-group {
+  padding-top: 0;
+  border-top: none;
+}
+.is-compact .lead-group {
+  flex-direction: row;
+  align-items: center;
+  gap: 2px;
+  flex: none;
+}
+.is-compact .lead-group .eyebrow {
+  padding: 0 8px 0 0;
+}
+.is-compact .lead-picker button {
+  min-width: 40px;
+  height: 36px;
+  padding: 0 8px;
 }
 
-@media (max-width: 1200px) {
+.dock {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  min-height: 0;
+  background: var(--s1);
+  border-top: 1px solid var(--line);
+}
+.dock .tabs {
+  padding: 0 8px;
+}
+.dock .tabs button {
+  height: 40px;
+}
+.dock-traces {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 0;
+}
+.trace-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.trace-toolbar::-webkit-scrollbar {
+  display: none;
+}
+/* in the dock the traces already have their own tab, so "Hide" means nothing */
+.trace-toolbar .trace-mode button:last-child {
+  display: none;
+}
+
+
+
+@media (max-width: 900px) {
   .case-meta {
     display: none;
   }
 }
 
-@media (max-width: 1100px) {
-  main {
-    grid-template-columns: 1fr;
+
+/* --- phone --------------------------------------------------------------- */
+
+@media (max-width: 640px) {
+  .topbar {
+    gap: 10px;
+    padding: 0 8px 0 12px;
   }
-  aside {
-    border-left: none;
-    border-top: 1px solid var(--md-outline-variant);
-    max-height: 45vh;
-  }
-  .sidebar-toggle {
+  .wordmark,
+  .topbar-divider {
     display: none;
+  }
+  .library select {
+    padding-left: 6px;
+    font-size: 13.5px;
+  }
+  .disclaimer {
+    width: 34px;
+    padding: 0;
+  }
+  .disclaimer .long {
+    display: none;
+  }
+  .is-compact .lead-group .eyebrow {
+    display: none;
+  }
+  .is-compact .lead-group + .lead-group {
+    padding-left: 12px;
+    border-left: 1px solid var(--line-2);
+  }
+  .is-compact .lead-picker {
+    gap: 12px;
+  }
+  .trace-toolbar .axis-group,
+  .trace-toolbar .trace-zoom > button:first-of-type {
+    display: none;
+  }
+
+  .stage-top {
+    top: 10px;
+    left: 12px;
+    right: 10px;
+    flex-wrap: wrap;
+  }
+  .readout-lead {
+    font-size: 26px;
+    line-height: 28px;
+  }
+  .readout-sub {
+    display: none;
+  }
+  .stage-tools {
+    gap: 6px;
+  }
+  .segmented > button {
+    padding: 0 8px;
+    font-size: 12px;
+  }
+  .stage-bottom {
+    left: 12px;
+    right: 84px;
+    bottom: 10px;
+  }
+  .conduction-banner .banner-detail {
+    display: none;
+  }
+  /* On a phone the stage is small: keep only the labels that carry the lesson
+     (lead polarity and the two live values). Orientation is on the gizmo. */
+  .scene-label.anatomy,
+  .scene-label.chamber,
+  .scene-label.conduction {
+    display: none !important;
+  }
+  .legend {
+    display: none;
+  }
+
+  .popover.options-card {
+    position: fixed;
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    max-height: 78dvh;
+    border-radius: 16px 16px 0 0;
+    border-bottom: none;
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index: 100;
+  }
+
+  .controls {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    grid-template-areas: "play scrub speed loop";
+    gap: 10px;
+    padding: 8px 12px;
+    min-height: 52px;
+  }
+  .controls .step-group,
+  .controls .readout {
+    display: none;
+  }
+  .controls .play {
+    grid-area: play;
+  }
+  .controls .scrub-wrap {
+    grid-area: scrub;
+  }
+  .controls .speed {
+    grid-area: speed;
+  }
+  .controls .toggle {
+    grid-area: loop;
+  }
+
+
+  .panels {
+    padding: 16px 16px 32px;
+  }
+}
+
+/* short wide screens (laptops, projectors): keep all 12 leads in the rail */
+@media (max-height: 820px) {
+  .is-wide .lead-picker {
+    gap: 8px;
+    padding: 10px 8px;
+  }
+  .is-wide .lead-picker button {
+    height: 26px;
+  }
+  .is-wide .lead-group .eyebrow {
+    padding-bottom: 2px;
   }
 }

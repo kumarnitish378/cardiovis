@@ -4,6 +4,7 @@ import { GizmoHelper, GizmoViewport, Grid, OrbitControls } from "@react-three/dr
 import * as THREE from "three";
 import { CAMERA_PRESETS, TORSO_RADIUS } from "../../lib/geometry";
 import { useStore } from "../../lib/store";
+import { useMediaQuery } from "../../lib/useMediaQuery";
 import { HeartScene } from "./HeartScene";
 import { LeadAxes, LeadProjection } from "./LeadProjection";
 import { VcgLoop } from "./VcgLoop";
@@ -35,7 +36,7 @@ function TorsoShell() {
     <group>
       <mesh scale={[TORSO_RADIUS * 0.98, TORSO_RADIUS * 1.2, TORSO_RADIUS * 0.6]}>
         <sphereGeometry args={[1, 28, 18]} />
-        <meshBasicMaterial color="#5b6a86" wireframe transparent opacity={0.055} depthWrite={false} />
+        <meshBasicMaterial color="#8a93a3" wireframe transparent opacity={0.055} depthWrite={false} />
       </mesh>
     </group>
   );
@@ -43,13 +44,14 @@ function TorsoShell() {
 
 export function Scene() {
   const showAllLeadAxes = useStore((s) => s.showAllLeadAxes);
+  const phone = useMediaQuery("(max-width: 640px)");
 
   return (
     <Canvas
       camera={{ position: CAMERA_PRESETS.oblique.position, fov: 42, near: 0.1, far: 100 }}
       dpr={[1, 2]}
       gl={{ antialias: true }}
-      onCreated={({ gl }) => gl.setClearColor(new THREE.Color("#0c0e13"))}
+      onCreated={({ gl }) => gl.setClearColor(new THREE.Color("#0a0b0d"))}
     >
       <hemisphereLight args={["#dfe8ff", "#2a1c22", 0.7]} />
       <directionalLight position={[4, 6, 8]} intensity={1.25} />
@@ -68,13 +70,18 @@ export function Scene() {
       <Grid
         args={[20, 20]}
         position={[0, -TORSO_RADIUS * 1.2, 0]}
-        cellColor="#282a2f"
-        sectionColor="#43474e"
+        cellColor="#16191d"
+        sectionColor="#252a31"
         fadeDistance={26}
         infiniteGrid
       />
-      <GizmoHelper alignment="bottom-right" margin={[64, 64]}>
-        <GizmoViewport labelColor="white" axisHeadScale={0.9} />
+      <GizmoHelper alignment="bottom-right" margin={phone ? [36, 40] : [56, 56]}>
+        <GizmoViewport
+          labelColor="#0a0b0d"
+          axisColors={["#ff6b57", "#3ccb94", "#7ea9ff"]}
+          axisHeadScale={0.85}
+          scale={phone ? 24 : 38}
+        />
       </GizmoHelper>
       <CameraRig />
     </Canvas>

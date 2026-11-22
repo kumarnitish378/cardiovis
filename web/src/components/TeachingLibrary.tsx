@@ -18,8 +18,6 @@ export function TeachingLibrary() {
         {cases.map((c) => (
           <option key={c.path} value={c.path}>
             {c.title}
-            {c.qrsMs ? ` - QRS ${Math.round(c.qrsMs)} ms` : ""}
-            {c.heartRateBpm ? `, ${Math.round(c.heartRateBpm)} bpm` : ""}
           </option>
         ))}
       </select>

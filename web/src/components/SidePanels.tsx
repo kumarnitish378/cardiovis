@@ -34,56 +34,48 @@ export function ProjectionReadout() {
   return (
     <section className="panel">
       <h2>
-        Why does {lead} look like this? <TierBadge tier={2} />
+        Why {lead} looks like this <TierBadge tier={2} />
       </h2>
       <p className="lede">
-        A lead is a shadow. The heart&rsquo;s electrical activity at this instant is one
-        vector; lead {lead} records its length along one fixed direction through the
-        torso. Everything {lead} does - its sign, its size, its shape - is that
-        projection changing as the vector swings.
+        {lead} records the heart vector&rsquo;s shadow on its own axis.
       </p>
       <table className="kv">
         <tbody>
           <tr>
-            <th>lead axis {lead}</th>
+            <th>Axis</th>
             <td>
-              [{u.map((v) => v.toFixed(2)).join(", ")}]{" "}
-              <span className="dim">
-                {entry.plane === "frontal"
-                  ? `${num(entry.angleDeg, 0, "°")} in the frontal plane`
-                  : `${num(entry.angleDeg, 0, "°")} in the transverse plane`}
-              </span>
+              {num(entry.angleDeg, 0, "°")} <span className="dim">{entry.plane === "frontal" ? "frontal" : "horizontal"}</span>
             </td>
           </tr>
           <tr>
-            <th>heart vector d(t)</th>
-            <td>
-              [{d.map((v) => v.toFixed(3)).join(", ")}] mV
-              <span className="dim"> &middot; magnitude {num(magnitude, 3, " mV")}</span>
-            </td>
+            <th>Vector</th>
+            <td>{num(magnitude, 2, " mV")}</td>
           </tr>
           <tr>
-            <th>projection d &middot; u</th>
+            <th>Projection</th>
             <td className={projection >= 0 ? "pos" : "neg"}>
-              <b>{num(projection, 3, " mV")}</b>
-              <span className="dim"> &middot; cos &theta; = {num(cos, 2)}</span>
+              <b>{num(projection, 2, " mV")}</b> <span className="dim">cos θ {num(cos, 2)}</span>
             </td>
           </tr>
           <tr>
-            <th>recorded {lead}</th>
+            <th>Recorded</th>
             <td>
-              {num(recorded, 3, " mV")}
-              <span className="dim"> &middot; difference {num(recorded - projection, 3, " mV")}</span>
+              {num(recorded, 2, " mV")} <span className="dim">Δ {num(recorded - projection, 2)}</span>
             </td>
           </tr>
         </tbody>
       </table>
-      <p className="footnote">
-        The projection and the recorded voltage are close but not identical. That gap is
-        the dipole model itself: a real heart is not a single rotating arrow, and the
-        transform that produced d(t) was fitted on other people&rsquo;s torsos, not this
-        one. The gap is the honest size of the Tier-2 approximation.
-      </p>
+      <details className="more">
+        <summary>Why they differ</summary>
+        <p>
+          A real heart is not a single rotating arrow, and the transform behind d(t) was
+          fitted on other people&rsquo;s torsos. The gap is the honest size of the Tier-2
+          approximation.
+        </p>
+        <p className="mono dim">
+          u = [{u.map((v) => v.toFixed(2)).join(", ")}] · d = [{d.map((v) => v.toFixed(3)).join(", ")}] mV
+        </p>
+      </details>
     </section>
   );
 }
@@ -99,12 +91,12 @@ export function MetricsPanel() {
   return (
     <section className="panel">
       <h2>
-        Measurements <TierBadge tier={2} detail="from this recording" />
+        Measurements <TierBadge tier={2} />
       </h2>
       <table className="kv compact">
         <tbody>
           <tr>
-            <th>heart rate</th>
+            <th>Rate</th>
             <td>{num(i.heartRateBpm, 0, " bpm")}</td>
             <td className="dim">{num(dev.rrMs && 60000 / dev.rrMs, 0, " device")}</td>
           </tr>
@@ -131,12 +123,12 @@ export function MetricsPanel() {
             <td className="dim">{num(i.qtcFridericiaMs, 0, " ms")} Fridericia</td>
           </tr>
           <tr>
-            <th>frontal QRS axis</th>
+            <th>QRS axis</th>
             <td>{num(a.frontalQrsAxisDeg, 0, "°")}</td>
             <td className="dim">{num(a.frontalQrsAxisFromVcgDeg, 0, "°")} from VCG</td>
           </tr>
           <tr>
-            <th>spatial QRS-T angle</th>
+            <th>QRS-T angle</th>
             <td>{num(a.spatialQrsTAngleDeg, 0, "°")}</td>
             <td className="dim">{num(a.peakQrsTAngleDeg, 0, "°")} peak method</td>
           </tr>
@@ -147,13 +139,15 @@ export function MetricsPanel() {
           </tr>
         </tbody>
       </table>
-      <p className="footnote">
-        {i.qtcNote} Device values come from the acquisition machine&rsquo;s own algorithm
-        and are shown for comparison only - neither column is ground truth. CardioVis
-        does not interpret these numbers or suggest a diagnosis.
-      </p>
+      <details className="more">
+        <summary>About these numbers</summary>
+        <p>
+          {i.qtcNote} The grey column is the acquisition device&rsquo;s own value, for
+          comparison only - neither is ground truth. CardioVis does not interpret these
+          numbers.
+        </p>
       {data.manifest.vcg.comparison && (
-        <p className="footnote">
+        <p>
           Two published transforms, same recording:{" "}
           <b>{String(data.manifest.vcg.comparison.methodA)}</b> vs{" "}
           <b>{String(data.manifest.vcg.comparison.methodB)}</b> correlate{" "}
@@ -164,6 +158,7 @@ export function MetricsPanel() {
           spread is how much precision the Tier-2 layer actually has.
         </p>
       )}
+      </details>
     </section>
   );
 }
@@ -176,12 +171,9 @@ export function WarningsPanel() {
 
   return (
     <section className="panel">
-      <h2>What this recording does not support</h2>
+      <h2>This recording</h2>
       {warnings.length === 0 ? (
-        <p className="lede">
-          No detection or rhythm warnings. Beats are regular and consistent, the lead
-          algebra checks out, and every stage of the pipeline found what it expected.
-        </p>
+        <p className="lede">No warnings. Beats are regular and the leads are consistent.</p>
       ) : (
         <ul className="warnings">
           {warnings.map((w) => (
@@ -200,17 +192,16 @@ export function WarningsPanel() {
         </p>
       )}
       {data.manifest.teaching?.synthetic && (
-        <p className="footnote synthetic">
-          <b>Synthetic recording.</b> {data.manifest.teaching.warning} Waveforms were built
-          by summing Gaussian vector components and projecting them onto published lead
-          vectors, so the &ldquo;true&rdquo; dipole is known exactly - useful for teaching
-          and for testing, but this is not a person.
-        </p>
-      )}
-      {(data.manifest.teaching as { transformNote?: string } | null)?.transformNote && (
-        <p className="footnote synthetic">
-          {(data.manifest.teaching as { transformNote?: string }).transformNote}
-        </p>
+        <details className="more">
+          <summary>Synthetic recording - not a person</summary>
+          <p>
+            {data.manifest.teaching.warning} Waveforms were built by projecting a known
+            dipole onto published lead vectors, so the true dipole is known exactly.
+          </p>
+          {(data.manifest.teaching as { transformNote?: string } | null)?.transformNote && (
+            <p>{(data.manifest.teaching as { transformNote?: string }).transformNote}</p>
+          )}
+        </details>
       )}
     </section>
   );

@@ -33,6 +33,8 @@ interface State {
   showConduction: boolean;
   showAllLeadAxes: boolean;
   showLabels: boolean;
+  /** Orientation and chamber names in 3D. Off by default: the lesson is the vector. */
+  showAnatomy: boolean;
   trailMs: number;
   cameraPreset: string;
   electrodeOffsets: Record<string, number>;
@@ -71,6 +73,7 @@ interface State {
   setShowConduction: (v: boolean) => void;
   setShowAllLeadAxes: (v: boolean) => void;
   setShowLabels: (v: boolean) => void;
+  setShowAnatomy: (v: boolean) => void;
   setTrailMs: (v: number) => void;
   setCameraPreset: (v: string) => void;
   gotoBeat: (index: number) => void;
@@ -131,6 +134,7 @@ export const useStore = create<State>((set, get) => ({
   showConduction: true,
   showAllLeadAxes: false,
   showLabels: true,
+  showAnatomy: false,
   trailMs: 400,
   cameraPreset: "oblique",
   electrodeOffsets: {},
@@ -138,7 +142,7 @@ export const useStore = create<State>((set, get) => ({
   viewStart: 0,
   viewSpan: 0,          // 0 means "the whole recording"; resolved once data loads
   gain: 1,
-  rowHeight: restore(ROW_HEIGHT_KEY, 52),
+  rowHeight: restore(ROW_HEIGHT_KEY, 28),
   followPlayhead: true,
   boxZoom: false,
 
@@ -146,7 +150,7 @@ export const useStore = create<State>((set, get) => ({
     ? ((localStorage.getItem(TRACE_MODE_KEY) as TraceMode | null) ?? "all")
     : "all"),
   // Default leaves the 3D stage the larger share on short (projector) screens.
-  traceHeight: restore(TRACE_HEIGHT_KEY, typeof window !== "undefined" ? Math.round(Math.min(230, window.innerHeight * 0.24)) : 230),
+  traceHeight: restore(TRACE_HEIGHT_KEY, typeof window !== "undefined" ? Math.round(Math.min(400, window.innerHeight * 0.36)) : 230),
   tracesFullHeight: null,
   sidebarOpen: true,
   controlsExpanded: false,
@@ -202,6 +206,7 @@ export const useStore = create<State>((set, get) => ({
   setShowConduction: (showConduction) => set({ showConduction }),
   setShowAllLeadAxes: (showAllLeadAxes) => set({ showAllLeadAxes }),
   setShowLabels: (showLabels) => set({ showLabels }),
+  setShowAnatomy: (showAnatomy) => set({ showAnatomy }),
   setTrailMs: (trailMs) => set({ trailMs }),
   setCameraPreset: (cameraPreset) => set({ cameraPreset }),
 

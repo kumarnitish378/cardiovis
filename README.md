@@ -116,25 +116,26 @@ naive_pinv` to change the transform.
 
 ## Look and feel
 
-The UI follows **Material Design 3**. Colour is expressed in M3 roles rather
-than ad-hoc hex values — one token block at the top of `web/src/styles.css`
-re-themes the whole app — and the roles are chosen so they carry the domain
-meaning:
+The UI is built to feel like a quiet scientific instrument: graphite surfaces,
+hairline rules, one type family (IBM Plex Sans and Mono), and saturated
+colour kept for data only. All the colour values live as tokens at the top of
+`web/src/styles.css`, and the 3D scene uses the same palette.
 
-| M3 role | Used for |
+| Token | Used for |
 |---|---|
-| primary (blue) | chrome, actions, Tier 1 "measured" |
-| secondary (teal) | Tier 2 "derived", the VCG loop, a positive projection |
-| tertiary (amber) | Tier 3 "illustrative", the lead axis |
-| error (red) | warnings, and the heart vector itself |
+| `--c-vector` (coral) | the heart vector, negative projections, the playhead |
+| `--c-lead` (amber) | the selected lead axis and its trace; Tier 3 "illustrative" |
+| `--c-proj` (green) | the projection onto the lead, the VCG loop; Tier 2 "derived" |
+| `--t1` (blue) | Tier 1 "measured" |
 
-Surfaces use the M3 tonal `surface-container` steps instead of shadows, shape
-follows the M3 scale, components are M3 (top app bar, primary tabs with
-indicator, filled/outlined/tonal buttons, segmented buttons, filter chips,
-cards, banners), and type is the M3 scale in Roboto with a system fallback. The
-3D scene reads the same palette, so the viewport and the UI are one design.
-Dark scheme only for now: the app is used in lecture theatres, where a light UI
-beside a dark 3D viewport is unreadable.
+Only one thing on screen is ever inverted (light fill, dark text): the lead you
+are looking through. Every other selected state is a quiet raised surface.
+
+**Responsive.** Above 1100 px the leads sit in a vertical rail beside the 3D
+view and the explanations in a side inspector. Below that (tablet portrait,
+phone), the leads become a scrollable strip under the 3D view, and the traces
+and explanations share one tabbed dock. On phones the display options open as
+a bottom sheet, and the stage keeps only the labels that carry the lesson.
 
 ## Architecture
 

@@ -8,8 +8,7 @@ defined, not an empirical model):
     Goldberger  aVR = -(I + II)/2   aVL = (I - III)/2   aVF = (II + III)/2
 
 Only 8 of the 12 leads are independent: I, II, V1..V6. Everything else is a
-linear combination. That fact is the whole reason for the tier model - see
-LIMITATIONS.md.
+linear combination. That fact is the whole reason for the tier model.
 """
 
 from __future__ import annotations

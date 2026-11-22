@@ -1809,3 +1809,319 @@ table.kv b {
     padding-bottom: 2px;
   }
 }
+
+/* ===== view mode switch (top bar) ======================================== */
+
+.mode-switch {
+  flex: none;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* ===== ECG view ========================================================== */
+
+.stage-column.ecg-column {
+  grid-template-rows: minmax(0, 1fr);
+}
+.is-compact .stage-column.ecg-column {
+  grid-template-rows: minmax(200px, 1fr) var(--dock-h, 40vh);
+}
+
+.ecg-paper {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 0;
+  min-width: 0;
+  background: var(--bg);
+}
+.ecg-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.ecg-toolbar .segmented {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.ecg-toolbar-end {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ecg-toolbar .hint {
+  font-size: 12px;
+  color: var(--text-3);
+}
+.field {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-3);
+}
+.field select {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 30px;
+  padding: 0 24px 0 10px;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 20 20' fill='none' stroke='%23a3a7ad' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-md);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+}
+.field select option {
+  background: var(--s1);
+}
+.heat-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-3);
+}
+.heat-legend i {
+  display: inline-block;
+  width: 18px;
+  height: 8px;
+  border-radius: 2px;
+}
+.heat-legend .neg {
+  background: #5a8cff;
+}
+.heat-legend .mid {
+  background: linear-gradient(90deg, #5a8cff, var(--s3), #ff6050);
+  width: 36px;
+}
+.heat-legend .pos {
+  background: #ff6050;
+}
+
+.ecg-canvas-wrap {
+  overflow: auto;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-2) transparent;
+}
+.theme-paper .ecg-canvas-wrap {
+  background: #fffdfb;
+}
+.ecg-canvas-stack {
+  position: relative;
+  margin: 0 auto;
+}
+.ecg-canvas-stack canvas {
+  position: absolute;
+  inset: 0 auto auto 0;
+  display: block;
+}
+.ecg-overlay {
+  cursor: crosshair;
+  touch-action: none;
+}
+
+/* ===== findings ========================================================== */
+
+table.kv.findings thead th {
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  padding-top: 0;
+  text-align: right;
+}
+table.kv.findings thead th:first-child {
+  text-align: left;
+}
+table.kv.findings td .val small {
+  margin-left: 3px;
+  color: var(--text-3);
+  font-size: 10.5px;
+}
+table.kv.findings td .flag {
+  margin-left: 6px;
+  font-size: 9px;
+}
+table.kv.findings tr.flag-high td:nth-child(2),
+table.kv.findings tr.flag-low td:nth-child(2) {
+  color: var(--c-vector);
+}
+table.kv.findings tr.flag-high th {
+  color: var(--text-2);
+}
+
+.st-grid {
+  display: grid;
+  gap: 12px;
+}
+.st-territory {
+  display: grid;
+  gap: 6px;
+}
+.st-cells {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.st-cell {
+  --heat: 0%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  width: 62px;
+  height: 46px;
+  padding: 0 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, #ff6050 var(--heat), var(--s2));
+}
+.st-cell.down {
+  background: color-mix(in srgb, #5a8cff var(--heat), var(--s2));
+}
+.st-cell:hover {
+  border-color: var(--line-2);
+}
+.st-cell.flagged {
+  border-color: var(--text);
+}
+.st-cell.active {
+  outline: 2px solid var(--c-lead);
+  outline-offset: 1px;
+}
+.st-lead {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text);
+  opacity: 0.8;
+}
+.st-val {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text);
+}
+.st-val small {
+  margin-left: 2px;
+  font-size: 10px;
+  color: var(--text-2);
+}
+
+.axis-wheel {
+  display: grid;
+  grid-template-columns: 148px 1fr;
+  align-items: center;
+  gap: 16px;
+}
+.axis-wheel svg {
+  width: 148px;
+  height: 148px;
+  overflow: visible;
+}
+.axis-ring {
+  fill: none;
+  stroke: var(--line-2);
+}
+.axis-normal {
+  fill: rgba(60, 203, 148, 0.1);
+  stroke: none;
+}
+.axis-lead line {
+  stroke: var(--line-2);
+  stroke-width: 1;
+}
+.axis-lead text {
+  fill: var(--text-3);
+  font-size: 9px;
+  font-family: var(--font);
+}
+.axis-vec line {
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+.axis-vec text {
+  font-size: 9.5px;
+  font-weight: 600;
+  font-family: var(--font);
+}
+.axis-vec.qrs line,
+.axis-vec.qrs circle {
+  stroke: var(--c-vector);
+  fill: var(--c-vector);
+}
+.axis-vec.qrs text {
+  fill: var(--c-vector);
+}
+.axis-vec.t line,
+.axis-vec.t circle {
+  stroke: var(--c-proj);
+  fill: var(--c-proj);
+}
+.axis-vec.t text {
+  fill: var(--c-proj);
+}
+.axis-vec.p line,
+.axis-vec.p circle {
+  stroke: var(--t1);
+  fill: var(--t1);
+}
+.axis-vec.p text {
+  fill: var(--t1);
+}
+.axis-values {
+  margin: 0;
+  display: grid;
+  gap: 6px;
+  font-size: 12.5px;
+}
+.axis-values div {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  white-space: nowrap;
+}
+.axis-values dt {
+  color: var(--text-3);
+}
+.axis-values dd {
+  margin: 0;
+  font-family: var(--mono);
+}
+
+@media (max-width: 640px) {
+  .mode-switch > button {
+    padding: 0 8px;
+  }
+  .ecg-toolbar .hint,
+  .ecg-toolbar .field > span {
+    display: none;
+  }
+  .ecg-toolbar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .ecg-toolbar::-webkit-scrollbar {
+    display: none;
+  }
+  .ecg-toolbar-end {
+    margin-left: 0;
+  }
+  .axis-wheel {
+    grid-template-columns: 150px 1fr;
+  }
+  .axis-wheel svg {
+    width: 150px;
+    height: 150px;
+  }
+}

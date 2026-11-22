@@ -3,7 +3,6 @@
 Every quantity CardioVis shows must declare where it came from. This is not
 decoration: the UI reads the tier off the payload and renders the badge from it.
 
-See LIMITATIONS.md for the argument behind the split.
 """
 
 from __future__ import annotations

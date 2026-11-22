@@ -13,19 +13,22 @@ import { BrandMark, Icon } from "./components/Icon";
 import { ResizeHandle, usePersistentSize } from "./components/ResizeHandle";
 import { LeadTracePanel } from "./components/LeadTracePanel";
 import { Scene } from "./components/scene/Scene";
-import { MetricsPanel, ProjectionReadout, TeachingNote, WarningsPanel } from "./components/SidePanels";
+import { EcgPaper } from "./components/EcgPaper";
+import { Findings } from "./components/Findings";
+import { ProjectionReadout, TeachingNote, WarningsPanel } from "./components/SidePanels";
 import { LeadPlacementLab, TeachingLibrary } from "./components/TeachingLibrary";
 import { ConductionBanner, TierBadge } from "./components/TierBadge";
 import { useClockLoop } from "./lib/clock";
 import { useStore } from "./lib/store";
 import { COMPACT_QUERY, useMediaQuery } from "./lib/useMediaQuery";
 
-type Tab = "traces" | "explain" | "measure" | "limits" | "lab";
+type Tab = "traces" | "explain" | "findings" | "limits" | "lab";
+type ViewMode = "3d" | "ecg";
 
 const TAB_LABELS: Record<Tab, string> = {
   traces: "Traces",
   explain: "Explain",
-  measure: "Measure",
+  findings: "Findings",
   limits: "Limits",
   lab: "Lab",
 };
@@ -62,6 +65,22 @@ export default function App() {
   const toggleSidebar = useStore((s) => s.toggleSidebar);
   const compact = useMediaQuery(COMPACT_QUERY);
   const [tab, setTab] = useState<Tab>("explain");
+  const [viewMode, setViewModeState] = useState<ViewMode>(() => {
+    try {
+      return localStorage.getItem("cardiovis.viewMode") === "ecg" ? "ecg" : "3d";
+    } catch {
+      return "3d";
+    }
+  });
+  const setViewMode = (m: ViewMode) => {
+    setViewModeState(m);
+    try {
+      localStorage.setItem("cardiovis.viewMode", m);
+    } catch {
+      /* not persisted */
+    }
+    setTab(m === "ecg" ? "findings" : compact ? "traces" : "explain");
+  };
 
   // Resizable panes: the inspector's width (wide) and the dock's height (compact).
   const [inspectorW, setInspectorW] = usePersistentSize("cardiovis.inspectorW", 320, 260, inspectorMax);
@@ -101,9 +120,12 @@ export default function App() {
     if (!compact && !sidebarOpen) toggleSidebar();
   };
 
-  const tabs: Tab[] = compact
-    ? ["traces", "explain", "measure", "limits", "lab"]
-    : ["explain", "measure", "limits", "lab"];
+  const tabs: Tab[] =
+    viewMode === "ecg"
+      ? ["findings", "limits"]
+      : compact
+        ? ["traces", "explain", "findings", "limits", "lab"]
+        : ["explain", "findings", "limits", "lab"];
 
   const panels = (
     <>
@@ -113,7 +135,7 @@ export default function App() {
           <TeachingNote />
         </>
       )}
-      {tab === "measure" && <MetricsPanel />}
+      {tab === "findings" && <Findings />}
       {tab === "limits" && (
         <>
           <WarningsPanel />
@@ -160,6 +182,26 @@ export default function App() {
         </div>
         <span className="topbar-divider" aria-hidden />
         <TeachingLibrary />
+        <div className="segmented mode-switch" role="radiogroup" aria-label="View">
+          <button
+            role="radio"
+            aria-checked={viewMode === "3d"}
+            className={viewMode === "3d" ? "active" : ""}
+            onClick={() => setViewMode("3d")}
+            title="3D heart, vector and lead projection"
+          >
+            3D
+          </button>
+          <button
+            role="radio"
+            aria-checked={viewMode === "ecg"}
+            className={viewMode === "ecg" ? "active" : ""}
+            onClick={() => setViewMode("ecg")}
+            title="Standard 12-lead on ECG paper, calipers, heatmap and measurements"
+          >
+            ECG
+          </button>
+        </div>
         {m && (
           <div className="case-meta" aria-label="Recording details">
             <span>
@@ -202,6 +244,26 @@ export default function App() {
       )}
 
       <main className="workspace">
+        {viewMode === "ecg" ? (
+        <section className="stage-column ecg-column">
+          <EcgPaper />
+          {compact && (
+            <div className="dock">
+              <ResizeHandle
+                axis="y"
+                invert
+                value={dockH}
+                onChange={setDockH}
+                onReset={() => setDockH(defaultDock())}
+                label="Resize panel"
+                className="dock-handle"
+              />
+              {tabBar}
+              <div className="panels">{panels}</div>
+            </div>
+          )}
+        </section>
+        ) : (
         <section className="stage-column">
           <div className="stage">
             {!compact && <LeadPicker />}
@@ -261,6 +323,7 @@ export default function App() {
             </div>
           )}
         </section>
+        )}
 
         {!compact && sidebarOpen && (
           <ResizeHandle
@@ -319,7 +382,7 @@ function LimitsPanel() {
           </ul>
         )}
         <p>
-          Full argument: <code>LIMITATIONS.md</code> and <code>METHODS.md</code>.
+          Methods and formulas: <code>METHODS.md</code>.
         </p>
       </details>
     </section>

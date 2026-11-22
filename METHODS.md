@@ -27,7 +27,7 @@ from filtering rather than filtered across.
 Also parsed: the device's global and per-lead measurements, its beat marks
 (`evt/beat/.../toc`, in rhythm-strip samples), its pacemaker-spike marks, and its
 interpretive statements — the last of which are **never exported and never
-displayed** (see `LIMITATIONS.md` §"Things CardioVis will never do").
+displayed**.
 
 Adapters register themselves through `cardiovis/ecg_parser/base.py`, so SCP-ECG,
 DICOM-ECG, HL7 aECG, Philips XML and WFDB can be added without touching anything
@@ -301,9 +301,7 @@ a repolarising wavefront has reversed polarity travelling in the reverse
 direction — which is why the normal T wave is concordant with the QRS.
 
 That modelled dipole is correlated against the measured Tier-2 dipole over the
-QRS windows and over whole beats, and the result is displayed. See
-`LIMITATIONS.md` for the table of correlations across the bundled cases, and for
-the conditions under which the model declares itself inapplicable.
+QRS windows and over whole beats, and the result is displayed.
 
 ---
 

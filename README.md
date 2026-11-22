@@ -32,9 +32,7 @@ correlation is ≈ 0.01, and the app says so.
 
 CardioVis will not emit a diagnostic statement, will not present the animation as
 this patient's actual activation sequence, and will not display identifiable
-patient data by default. See **[LIMITATIONS.md](LIMITATIONS.md)** for why the
-wavefront is not recoverable from 8 signals, and **[PRIVACY.md](PRIVACY.md)** for
-what is stripped.
+patient data by default. See **[PRIVACY.md](PRIVACY.md)** for what is stripped.
 
 ## Quick start
 
@@ -67,6 +65,19 @@ python -m pytest tests -q
 naive_pinv` to change the transform.
 
 ## The interface
+
+Two views, switched in the top bar:
+
+- **ECG** — the tracing the way it is read clinically: standard 3 × 4 layout
+  plus a 10 s rhythm strip on calibrated paper (25/50 mm/s, 5/10/20 mm/mV,
+  calibration pulse on every row, paper or dark theme). **Drag to measure**
+  with calipers (Δt, rate, ΔV); click a lead to select it. A **heatmap** shows
+  every lead coloured by voltage over the median beat (with R, J and J+60
+  markers) or over the full 10 s, so territory patterns stand out. The
+  **Findings** panel lists intervals against reference ranges, the frontal
+  axis on a hexaxial wheel, and ST deviation per lead grouped by territory.
+  All measurements are automated and should be verified on the tracing.
+- **3D** — the heart, its vector and the lead projection described below.
 
 - **Projection tab** — the feature above. Lead axis, dipole, dropped
   perpendicular, projection bar, and the live numbers: `d · u` next to the
@@ -208,8 +219,6 @@ against the acquisition device's own algorithm and the sensitivities behind it.
 
 ## Documentation
 
-- **[LIMITATIONS.md](LIMITATIONS.md)** — why the wavefront cannot be recovered,
-  in plain language. Linked from the app.
 - **[METHODS.md](METHODS.md)** — every transform, filter and formula, with
   primary-source citations and the measured errors.
 - **[PRIVACY.md](PRIVACY.md)** — what is stripped, what is retained, why.

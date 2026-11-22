@@ -3,7 +3,7 @@
 This is the Tier-2 core of CardioVis. Everything here is patient-specific and
 defensible: 8 independent leads in, 3 numbers per instant out, by a published
 linear transform. Nothing here claims to know *where* in the myocardium the
-current is flowing - see LIMITATIONS.md.
+current is flowing.
 
 Coordinate frame (Frank convention, shared with leads.py):
     +x subject left, +y subject foot (inferior), +z subject back (posterior)

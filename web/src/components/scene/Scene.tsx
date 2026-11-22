@@ -5,6 +5,8 @@ import * as THREE from "three";
 import { CAMERA_PRESETS, TORSO_RADIUS } from "../../lib/geometry";
 import { useStore } from "../../lib/store";
 import { useMediaQuery } from "../../lib/useMediaQuery";
+import { Body } from "./Body";
+import { BloodFlow } from "./BloodFlow";
 import { HeartScene } from "./HeartScene";
 import { LeadAxes, LeadProjection } from "./LeadProjection";
 import { VcgLoop } from "./VcgLoop";
@@ -29,19 +31,6 @@ function CameraRig() {
   return <OrbitControls ref={controls} enablePan={false} minDistance={2.5} maxDistance={18} />;
 }
 
-/** A translucent shell standing in for the torso, so the lead axes have
- *  somewhere to end and the viewer keeps their bearings. */
-function TorsoShell() {
-  return (
-    <group>
-      <mesh scale={[TORSO_RADIUS * 0.98, TORSO_RADIUS * 1.2, TORSO_RADIUS * 0.6]}>
-        <sphereGeometry args={[1, 28, 18]} />
-        <meshBasicMaterial color="#8a93a3" wireframe transparent opacity={0.055} depthWrite={false} />
-      </mesh>
-    </group>
-  );
-}
-
 export function Scene() {
   const showAllLeadAxes = useStore((s) => s.showAllLeadAxes);
   const phone = useMediaQuery("(max-width: 640px)");
@@ -59,11 +48,12 @@ export function Scene() {
 
       <Suspense fallback={null}>
         <HeartScene />
+        <BloodFlow />
         <VcgLoop />
         <VectorArrow />
         <LeadProjection />
         {showAllLeadAxes && <LeadAxes />}
-        <TorsoShell />
+        <Body />
         <SceneLabels />
       </Suspense>
 

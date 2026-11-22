@@ -299,7 +299,7 @@ function LimitsPanel() {
           <TierBadge tier={2} /> The heart vector, axis, intervals and loop - computed from the leads.
         </li>
         <li>
-          <TierBadge tier={3} /> The colour on the heart - textbook timing, not this patient.
+          <TierBadge tier={3} /> The colour, contraction and blood flow - textbook physiology timed by this recording&rsquo;s beats, not measured in this patient.
         </li>
       </ul>
       {conduction?.agreement?.verdict && <p className="footnote">{conduction.agreement.verdict}</p>}

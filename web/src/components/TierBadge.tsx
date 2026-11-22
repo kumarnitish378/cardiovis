@@ -26,7 +26,7 @@ export function TierBadge({ tier, detail }: { tier: TierNumber; detail?: string 
 }
 
 /**
- * The Tier-3 notice. It has no close button, on purpose: the moment a user can
+ * The Tier-3 notice - covers the colour, the contraction and the blood flow. It has no close button, on purpose: the moment a user can
  * dismiss it, the animation starts looking like a measurement of this patient.
  * It is only hidden when the conduction model itself is switched off.
  * "Why?" opens the Limits panel, where the full argument lives.
@@ -34,8 +34,10 @@ export function TierBadge({ tier, detail }: { tier: TierNumber; detail?: string 
 export function ConductionBanner({ onExplain }: { onExplain?: () => void }) {
   const data = useStore((s) => s.data);
   const showConduction = useStore((s) => s.showConduction);
+  const showMotion = useStore((s) => s.showMotion);
+  const showFlow = useStore((s) => s.showFlow);
   const conduction = data?.manifest.conduction;
-  if (!showConduction || !conduction) return null;
+  if (!conduction || !(showConduction || showMotion || showFlow)) return null;
 
   const r = conduction.agreement?.qrs?.r_overall;
   const applicable = conduction.applicable;
@@ -45,11 +47,11 @@ export function ConductionBanner({ onExplain }: { onExplain?: () => void }) {
       className={`conduction-banner ${applicable ? "" : "not-applicable"}`}
       onClick={onExplain}
       title={`${conduction.badge}. Model vs measured dipole, QRS: r = ${typeof r === "number" ? r.toFixed(2) : "n/a"}.${applicable ? "" : " This recording breaks the model's assumptions."} ${conduction.agreement?.verdict ?? ""}`}
-      aria-label="Illustrative colour - what this means"
+      aria-label="Colour, contraction and blood flow are illustrative - what this means"
     >
       <span className="tier-dot" />
       <span className="banner-text">
-        <b>Illustrative colour</b>
+        <b>Illustrative model</b>
         {typeof r === "number" && <span className="banner-detail">r {r.toFixed(2)}</span>}
       </span>
       <Icon name="info" size={16} />

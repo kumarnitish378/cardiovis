@@ -408,3 +408,101 @@ export const HEART_CENTRE = (() => {
   }
   return box.getCenter(new THREE.Vector3());
 })();
+
+// ---------------------------------------------------------------------------
+// Mechanics and blood flow
+// ---------------------------------------------------------------------------
+
+export const ATRIAL_KEYS = ["ra", "la"];
+export const VENTRICULAR_KEYS = ["rv", "lv", "lv_basal", "septum", "av", "his"];
+
+function unionCentre(keys: string[]): THREE.Vector3 {
+  const box = new THREE.Box3();
+  for (const k of keys) {
+    const g = REGION_PARTS[k]?.geometry;
+    if (!g) continue;
+    g.computeBoundingBox();
+    box.union(g.boundingBox!);
+  }
+  return box.getCenter(new THREE.Vector3());
+}
+
+/** Ventricles contract about a point near the apex: in a real heart the apex
+ *  barely moves while the AV plane descends toward it. */
+export const VENTRICLE_PIVOT = unionCentre(["rv", "lv", "lv_basal", "septum"]).lerp(APEX, 0.6);
+export const ATRIA_PIVOT = unionCentre(ATRIAL_KEYS);
+
+/** Centre of the RV cavity at local height y: between septum and free wall. */
+function rvCavity(y: number, spread = 0): THREE.Vector3 {
+  const r = lvRadius(y) * 1.32 + 0.05;
+  const phi = SEPTAL_PHI + spread;
+  return toScene(LV_X + r * Math.sin(phi), y, LV_Z + r * Math.cos(phi));
+}
+function lvCavity(y: number): THREE.Vector3 {
+  return toScene(LV_X, y, LV_Z);
+}
+
+export interface FlowPath {
+  /** Veins -> atrium -> AV valve -> ventricular cavity (fills in diastole). */
+  inflow: THREE.CatmullRomCurve3;
+  /** Ventricular cavity -> semilunar valve -> great artery (moves in systole). */
+  outflow: THREE.CatmullRomCurve3;
+  /** Deoxygenated (right heart) or oxygenated (left heart). */
+  side: "right" | "left";
+}
+
+const RA_CENTRE = centroid(REGION_PARTS.ra.geometry);
+const LA_CENTRE = V(-0.12, 0.72, -0.62);
+const RVOT_CENTRE = toScene(0.0, 0.42, 0.52);
+const PA_BIF = V(0.02, 1.42, 0.18);
+const curve = (pts: THREE.Vector3[]) => new THREE.CatmullRomCurve3(pts, false, "centripetal");
+
+const rightOutflow = (branch: THREE.Vector3[]) =>
+  curve([
+    rvCavity(-0.95, 0.2),
+    rvCavity(-0.45, 0.35),
+    RVOT_CENTRE,
+    PULMONARY_VALVE,
+    V(PULMONARY_VALVE.x + 0.04, 1.2, 0.48),
+    PA_BIF,
+    ...branch,
+  ]);
+const leftOutflow = () =>
+  curve([
+    lvCavity(-1.25),
+    lvCavity(-0.55).lerp(AORTIC_VALVE, 0.25),
+    lvCavity(0.1).lerp(AORTIC_VALVE, 0.6),
+    AORTIC_VALVE,
+    V(AORTIC_VALVE.x - 0.12, AORTIC_VALVE.y + 0.42, AORTIC_VALVE.z + 0.08),
+    V(-0.4, 1.55, 0.02),
+    V(-0.16, 1.86, -0.32),
+    V(0.18, 1.8, -0.7),
+    V(0.32, 1.35, -0.9),
+    V(0.34, 0.5, -0.98),
+    V(0.32, -0.6, -0.98),
+  ]);
+
+const PV = (dx: number, dy: number) => V(LA_CENTRE.x + dx * 2.6, LA_CENTRE.y + dy * 1.6, LA_CENTRE.z - 0.42);
+
+export const FLOW_PATHS: FlowPath[] = [
+  {
+    side: "right",
+    inflow: curve([V(-1.02, 2.05, 0.05), V(-1.02, 1.35, 0.08), RA_CENTRE, rvCavity(0.25, -0.1), rvCavity(-0.95, 0.2)]),
+    outflow: rightOutflow([V(0.36, 1.5, 0.0), V(0.7, 1.42, -0.32)]),
+  },
+  {
+    side: "right",
+    inflow: curve([V(-0.88, -0.95, -0.18), V(-0.94, -0.1, -0.06), RA_CENTRE, rvCavity(0.2, 0.2), rvCavity(-0.95, 0.2)]),
+    outflow: rightOutflow([V(-0.28, 1.36, -0.18), V(-0.8, 1.32, -0.36)]),
+  },
+  {
+    side: "left",
+    inflow: curve([PV(-0.32, 0.12), V(LA_CENTRE.x - 0.4, LA_CENTRE.y + 0.1, LA_CENTRE.z - 0.15), LA_CENTRE, lvCavity(0.32), lvCavity(-1.25)]),
+    outflow: leftOutflow(),
+  },
+  {
+    side: "left",
+    inflow: curve([PV(0.3, -0.12), V(LA_CENTRE.x + 0.4, LA_CENTRE.y - 0.05, LA_CENTRE.z - 0.15), LA_CENTRE, lvCavity(0.3), lvCavity(-1.25)]),
+    outflow: leftOutflow(),
+  },
+];

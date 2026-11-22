@@ -31,6 +31,10 @@ interface State {
   vcgChoice: VcgChoice;
   showModelDipole: boolean;
   showConduction: boolean;
+  /** Chambers contract with the (modelled) excitation. Tier 3. */
+  showMotion: boolean;
+  /** Blood-flow particles. Tier 3. */
+  showFlow: boolean;
   showAllLeadAxes: boolean;
   showLabels: boolean;
   /** Orientation and chamber names in 3D. Off by default: the lesson is the vector. */
@@ -71,6 +75,8 @@ interface State {
   setVcgChoice: (v: VcgChoice) => void;
   setShowModelDipole: (v: boolean) => void;
   setShowConduction: (v: boolean) => void;
+  setShowMotion: (v: boolean) => void;
+  setShowFlow: (v: boolean) => void;
   setShowAllLeadAxes: (v: boolean) => void;
   setShowLabels: (v: boolean) => void;
   setShowAnatomy: (v: boolean) => void;
@@ -132,6 +138,8 @@ export const useStore = create<State>((set, get) => ({
   vcgChoice: "primary",
   showModelDipole: false,
   showConduction: true,
+  showMotion: true,
+  showFlow: true,
   showAllLeadAxes: false,
   showLabels: true,
   showAnatomy: false,
@@ -204,6 +212,8 @@ export const useStore = create<State>((set, get) => ({
   setVcgChoice: (vcgChoice) => set({ vcgChoice }),
   setShowModelDipole: (showModelDipole) => set({ showModelDipole }),
   setShowConduction: (showConduction) => set({ showConduction }),
+  setShowMotion: (showMotion) => set({ showMotion }),
+  setShowFlow: (showFlow) => set({ showFlow }),
   setShowAllLeadAxes: (showAllLeadAxes) => set({ showAllLeadAxes }),
   setShowLabels: (showLabels) => set({ showLabels }),
   setShowAnatomy: (showAnatomy) => set({ showAnatomy }),

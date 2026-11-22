@@ -195,6 +195,8 @@ export function SceneOptions() {
             <Switch checked={s.showAnatomy} onChange={s.setShowAnatomy} label="Anatomy labels" />
             <Switch checked={s.showAllLeadAxes} onChange={s.setShowAllLeadAxes} label="All lead axes" />
             <Switch checked={s.showConduction} onChange={s.setShowConduction} label="Conduction colour" hint="Illustrative" />
+            <Switch checked={s.showMotion} onChange={s.setShowMotion} label="Contraction" hint="Illustrative" />
+            <Switch checked={s.showFlow} onChange={s.setShowFlow} label="Blood flow" hint="Illustrative" />
             <Switch checked={s.showModelDipole} onChange={s.setShowModelDipole} label="Modelled dipole" hint="Illustrative" />
             <div className="slider-row">
               <span>Trail</span>

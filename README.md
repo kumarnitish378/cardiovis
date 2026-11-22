@@ -23,7 +23,7 @@ tier:
 |---|---|---|
 | **1 — Measured** | Directly in the file | the 12 waveforms, sample rate, device metadata |
 | **2 — Derived** | Recovered from the 8 independent leads by published maths, patient-specific | the dipole `d(t)`, QRS axis, PR/QRS/QT/QTc, spatial QRS-T angle, loop shape |
-| **3 — Illustrative** | Textbook physiology, timed by this patient's fiducials | the colour sweeping across the chambers |
+| **3 — Illustrative** | Textbook physiology, timed by this patient's fiducials | the colour sweeping across the chambers, the chambers contracting, the blood-flow particles |
 
 Tier 3 carries a badge that **cannot be dismissed**, and the model **checks
 itself**: its implied dipole is correlated against the measured one and the
